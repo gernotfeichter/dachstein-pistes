@@ -26,11 +26,11 @@ function onDeviceReady() {
 }
 
 function main() {
-    console.debug('read state');
-    var state = readState(State.cookieName);
+    var state = readState(Cookie.name);
+    console.debug(`read state : ${state}`);
 
     console.debug('starting query');
-    fetch('https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht', {
+    var fetchResult = fetch('https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht', {
         method: 'GET',
     })
         .then(function (response) {
@@ -43,66 +43,74 @@ function main() {
             var table = doc.getElementById('accordion-pisten-dachstein').querySelector('table'),
                 rows = table.rows, rowcount = rows.length, r,
                 cells, cellcount, cellIndex, cell;
-            
+
             console.debug("start table scan");
-            
+
             for (r = 1; r < rowcount; r++) {
                 cells = rows[r].cells;
                 cellcount = cells.length;
-                var currentPiste = new Piste();
+                let currentPiste = new Piste();
                 for (cellIndex = 0; cellIndex < cellcount; cellIndex++) {
                     cell = cells[cellIndex];
-                    cellString = cell.innerText.trim();
-
-                    // parse piste status
-                    if (cellString.includes("status bg-danger")) {
-                        currentPiste.status = Piste.STATUS.CLOSED
-                        continue;
+                    if (cellIndex == 0) {
+                        // parse piste status
+                        let cellString = cell.innerHTML;
+                        if (cellString.includes("status bg-danger")) {
+                            currentPiste.status = Piste.STATUS.CLOSED
+                            continue;
+                        }
+                        if (cellString.includes("status bg-success")) {
+                            currentPiste.status = Piste.STATUS.OPEN
+                            continue;
+                        }
+                        if (cellString.includes("status bg-warning")) {
+                            currentPiste.status = Piste.STATUS.WARNING
+                            continue;
+                        }
+                        console.error(`Could not parse piste state for piste of table row ${r} cell ${cellIndex}!`);
                     }
-                    if (cellString.includes("status bg-success")) {
-                        currentPiste.status = Piste.STATUS.OPEN
-                        continue;
+                    // cellIndex == 1 would be type (red, black piste etc.), but irrelevant here
+                    // cellIndex == 2 speculation: if type warning there would be a warning text here
+                    if (cellIndex == 3) {
+                        let cellString = cell.innerText.trim();
+                        // parse piste name
+                        if (cellString) {
+                            currentPiste.name = cellString;
+                            // update piste state
+                            state.notifyPisteState(currentPiste);
+                        } else {
+                            console.error(`Could not parse piste name for piste of table row ${r} cell ${cellIndex}!`);
+                        }
                     }
-                    if (cellString.includes("status bg-warning")) {
-                        currentPiste.status = Piste.STATUS.WARNING
-                        continue;
-                    }
-                    if (cellString == "") {
-                        continue;
-                    }
-
-                    // parse piste name
-                    currentPiste.name = cellString;
-
-                    // update piste state
-                    state.notifyPisteState(currentPiste);
-
                 }
             }
             console.debug("finished table scan without errors");
-            document.getElementById('maintext').innerText = 'something good';
+            document.getElementById('maintext').innerText = 'good';
+            return;
         })
         .catch(function (error) {
             console.error(error);
         })
 
-    console.debug('write state');
-    writeState(state);
+    fetchResult.then(() => {
+        console.debug(`write state: ${state}`);
+        writeState(state);
+    });
 }
 
 function readState(cookieName) {
     var cookieIdentifier = `${cookieName}=`;
     var decodedCookie = decodeURIComponent(document.cookie);
     var cookieArray = decodedCookie.split(';');
-    for(var i = 0; i <cookieArray.length; i++) {
-      var cookie = cookieArray[i];
-      while (cookie.charAt(0) == ' ') {
-        cookie = cookie.substring(1);
-      }
-      if (cookie.indexOf(cookieIdentifier) == 0) {
-        var cookieValue = cookie.substring(cookieIdentifier.length, cookie.length);
-        return State.fromString(cookieValue);
-      }
+    for (var i = 0; i < cookieArray.length; i++) {
+        var cookie = cookieArray[i];
+        while (cookie.charAt(0) == ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(cookieIdentifier) == 0) {
+            var cookieValue = cookie.substring(cookieIdentifier.length, cookie.length);
+            return State.fromString(cookieValue);
+        }
     }
     return State.default();
 }

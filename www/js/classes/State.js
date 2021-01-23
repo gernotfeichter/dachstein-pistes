@@ -5,12 +5,12 @@ class State {
     }
 
     toString() {
-        return JSON.stringify({ pistes: this.pistes, notificationsForPistes: this.notificationsForPistes });
+        return JSON.stringify({ pistes: Array.from(this.pistes), notificationsForPistes: Array.from(this.notificationsForPistes) });
     }
 
     static fromString(serializedString) {
         var stateJson = JSON.parse(serializedString);
-        return new State(stateJson.pistes, stateJson.notificationsForPistes);
+        return new State(new Set(stateJson.pistes), new Set(stateJson.notificationsForPistes));
     }
 
     notifyPisteState(pisteNew) {
@@ -28,15 +28,15 @@ class State {
         } else{
             console.debug(`adding new piste: ${pisteNew}`);
         }
-        this.pistes.set(pisteNew);
+        this.pistes.add(pisteNew);
     }
 
     static default() {
-        let notificationsForPistes = new Map();
-        notificationsForPistes.set("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)", true);
-        notificationsForPistes.set("Skitour Route Obertraun", true);
+        let notificationsForPistes = new Set();
+        notificationsForPistes.add("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)");
+        notificationsForPistes.add("Skitour Route Obertraun");
         return new State(
-            new Map(),
+            new Set(),
             notificationsForPistes
         );
     }
