@@ -1,0 +1,112 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Wait for the deviceready event before using any of Cordova's device APIs.
+// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
+document.addEventListener('deviceready', onDeviceReady, false);
+
+function onDeviceReady() {
+    main();
+}
+
+function main() {
+    console.debug('read state');
+    var state = readState(State.cookieName);
+
+    console.debug('starting query');
+    fetch('https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht', {
+        method: 'GET',
+    })
+        .then(function (response) {
+            return response.text();
+        })
+        .then(function (html) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+
+            var table = doc.getElementById('accordion-pisten-dachstein').querySelector('table'),
+                rows = table.rows, rowcount = rows.length, r,
+                cells, cellcount, cellIndex, cell;
+            
+            console.debug("start table scan");
+            
+            for (r = 1; r < rowcount; r++) {
+                cells = rows[r].cells;
+                cellcount = cells.length;
+                var currentPiste = new Piste();
+                for (cellIndex = 0; cellIndex < cellcount; cellIndex++) {
+                    cell = cells[cellIndex];
+                    cellString = cell.innerText.trim();
+
+                    // parse piste status
+                    if (cellString.includes("status bg-danger")) {
+                        currentPiste.status = Piste.STATUS.CLOSED
+                        continue;
+                    }
+                    if (cellString.includes("status bg-success")) {
+                        currentPiste.status = Piste.STATUS.OPEN
+                        continue;
+                    }
+                    if (cellString.includes("status bg-warning")) {
+                        currentPiste.status = Piste.STATUS.WARNING
+                        continue;
+                    }
+                    if (cellString == "") {
+                        continue;
+                    }
+
+                    // parse piste name
+                    currentPiste.name = cellString;
+
+                    // update piste state
+                    state.notifyPisteState(currentPiste);
+
+                }
+            }
+            console.debug("finished table scan without errors");
+            document.getElementById('maintext').innerText = 'something good';
+        })
+        .catch(function (error) {
+            console.error(error);
+        })
+
+    console.debug('write state');
+    writeState(state);
+}
+
+function readState(cookieName) {
+    var cookieIdentifier = `${cookieName}=`;
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(';');
+    for(var i = 0; i <cookieArray.length; i++) {
+      var cookie = cookieArray[i];
+      while (cookie.charAt(0) == ' ') {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(cookieIdentifier) == 0) {
+        var cookieValue = cookie.substring(cookieIdentifier.length, cookie.length);
+        return State.fromString(cookieValue);
+      }
+    }
+    return State.default();
+}
+
+function writeState(state) {
+    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}`;
+}
