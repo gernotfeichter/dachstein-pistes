@@ -28,7 +28,7 @@ class State {
                 console.debug(`piste state of ${pisteNew.name} remains ${pisteNew.state}: no notification`);
             } else{
                 console.debug(`piste state of ${pisteNew.name} changed from to ${pisteNew.state}: show notification if configured`);
-                if (this.notificationsForPistes.get(pisteNew.name)) {
+                if (this.notificationsForPistes.has(pisteNew.name)) {
                     console.debug(`notification is configured for piste ${pisteNew.name}, showing it to the user`);
                     BrowserNotification.requestPermissionAndShow(`Piste ${pisteNew.name} changed from state ${pisteOld.state} to ${pisteNew.state}!`);
                 } else {
@@ -36,9 +36,15 @@ class State {
                 }
             }
         } else{
-            console.debug(`adding new piste: ${pisteNew}`);
+            console.debug(`adding new piste: ${pisteNew}: show notification if configured`);
+            this.pistes.add(pisteNew);
+            if (this.notificationsForPistes.has(pisteNew.name)) {
+                console.debug(`notification is configured for piste ${pisteNew.name}, showing it to the user`);
+                BrowserNotification.requestPermissionAndShow(`Piste ${pisteNew.name} changed from state unknown to ${pisteNew.state}!`);
+            } else {
+                console.debug(`notification is not configured for piste ${pisteNew.name}, not showing it to the user`);
+            }
         }
-        this.pistes.add(pisteNew);
     }
 
     static default() {
