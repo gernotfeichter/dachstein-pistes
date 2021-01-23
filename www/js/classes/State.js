@@ -10,19 +10,29 @@ class State {
 
     static fromString(serializedString) {
         var stateJson = JSON.parse(serializedString);
-        return new State(new Set(stateJson.pistes), new Set(stateJson.notificationsForPistes));
+
+        var pisteObects = stateJson.pistes; // type Object
+        var pistes = []; // type Piste
+        pisteObects.forEach(currentPisteObject => {
+            pistes.push(new Piste(currentPisteObject.name, currentPisteObject.status));
+        });
+
+        return new State(new Set(pistes), new Set(stateJson.notificationsForPistes));
     }
 
     notifyPisteState(pisteNew) {
         console.debug(`notify piste state: ${pisteNew}`);
-        if (this.pistes.has(pisteNew.name)) {
-            var pisteOld = this.pistes.get(pisteNew.name);
+        let pisteOld = Array.from(this.pistes).find( obj =>{ return obj.name == pisteNew.name });
+        if ( pisteOld ) {
             if (pisteOld.state == pisteNew.state) {
                 console.debug(`piste state of ${pisteNew.name} remains ${pisteNew.state}: no notification`);
             } else{
                 console.debug(`piste state of ${pisteNew.name} changed from to ${pisteNew.state}: show notification if configured`);
                 if (this.notificationsForPistes.get(pisteNew.name)) {
                     console.debug(`notification is configured for piste ${pisteNew.name}, showing it to the user`);
+                    BrowserNotification.requestPermissionAndShow(`Piste ${pisteNew.name} changed from state ${pisteOld.state} to ${pisteNew.state}!`);
+                } else {
+                    console.debug(`notification is not configured for piste ${pisteNew.name}, not showing it to the user`);
                 }
             }
         } else{
