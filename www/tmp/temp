@@ -1,0 +1,17 @@
+autoClear: true
+foreground: null
+icon: null
+iconType: null
+launch: true
+led: true
+lockscreen: true
+smallIcon: "res://icon"
+sound: true
+sticky: false
+summary: null
+text: ""
+timeoutAfter: false
+title: ""
+trigger: {type: "calendar"}
+vibrate: false
+wakeup: true

@@ -1,8 +1,18 @@
-# Execute
+# End User Guide
+Currently only an android version exists and it is not yet published on Google Play store. Instead it must be compiled and installed manually.
+
+Supporting other platforms is currently not planned.
+
+# Developer Guide
+
+## Dependencies
+* node: v14.15.4
+* cordova: 10.0.0
+* Android Studio: 201.6953283-linux
 
 ## Run
 
-`cordova run browser`
+`cordova run browser`\
 `cordova run android`
 
 ## Debug
@@ -24,8 +34,11 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 # Status
 
 TODO:
+* Widget for pistes
 * Regular Polling
-* Tabular Response Parsing
-* Regex Table Reduce
 * Notifications on Status Change
 * Publish
+* Consider refactoring `notificationsForPistes` into `pistes.notifications: bool`
+* Consider using only json objects instead of classes.
+* Consider making all interesting pistes (shown in widget) configurable: `pistes.interesting: bool`,
+* Consider making all notifications for pistes configurable: `pistes.notifications: bool`
