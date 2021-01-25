@@ -22,7 +22,16 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
+    let inveralMilliseconds = 60 * 60 * 1000; // 1h
+    startMainLoop(inveralMilliseconds);
+}
+
+function startMainLoop(inveralMilliseconds) {
     main();
+    let intervalId = setInterval(function () {
+        console.debug(`Interval reached: ${inveralMilliseconds}ms passed, refreshing`);
+        main();
+    }, inveralMilliseconds);
 }
 
 function main() {

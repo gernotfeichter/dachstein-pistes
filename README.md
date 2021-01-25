@@ -35,7 +35,6 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 
 TODO:
 * Widget for pistes
-* Regular Polling
 * Notifications on Status Change
 * Publish
 * Consider refactoring `notificationsForPistes` into `pistes.notifications: bool`
