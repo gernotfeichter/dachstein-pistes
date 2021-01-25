@@ -25,7 +25,7 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 * for local development/usage allow the domain via a cors browser plugin
 ### state
 * all state is handled via cookies
-* resetting via chrome does not work (at leat for android emultated app)\
+* resetting via chrome does not work for webview (at leat for android emultated app)\
   snippet to run in js console for manual reset:
   ```js
   document.cookie = `${Cookie.name}={};expires=Thu, 01 Jan 1970 00:00:00 GMT;path=<${Cookie.path}`;
@@ -35,7 +35,6 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 
 TODO:
 * Widget for pistes
-* Notifications on Status Change
 * Publish
 * Consider refactoring `notificationsForPistes` into `pistes.notifications: bool`
 * Consider using only json objects instead of classes.
