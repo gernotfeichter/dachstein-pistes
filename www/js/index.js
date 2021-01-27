@@ -94,7 +94,6 @@ function main() {
                 }
             }
             console.debug("finished table scan without errors");
-            document.getElementById('maintext').innerText = 'good';
             return;
         })
         .catch(function (error) {

@@ -18,4 +18,3 @@ function pisteStatusTable() {
   }
   myTableDiv.appendChild(table);
 }
-addTable();
