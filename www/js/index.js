@@ -59,21 +59,22 @@ function main() {
                 cells = rows[r].cells;
                 cellcount = cells.length;
                 let currentPiste = new Piste();
+                currentPiste.setDefaults();
                 for (cellIndex = 0; cellIndex < cellcount; cellIndex++) {
                     cell = cells[cellIndex];
                     if (cellIndex == 0) {
                         // parse piste status
                         let cellString = cell.innerHTML;
                         if (cellString.includes("status bg-danger")) {
-                            currentPiste.status = Piste.STATUS.CLOSED
+                            currentPiste.state = Piste.STATE.CLOSED
                             continue;
                         }
                         if (cellString.includes("status bg-success")) {
-                            currentPiste.status = Piste.STATUS.OPEN
+                            currentPiste.state = Piste.STATE.OPEN
                             continue;
                         }
                         if (cellString.includes("status bg-warning")) {
-                            currentPiste.status = Piste.STATUS.WARNING
+                            currentPiste.state = Piste.STATE.WARNING
                             continue;
                         }
                         console.error(`Could not parse piste state for piste of table row ${r} cell ${cellIndex}!`);
@@ -108,7 +109,7 @@ function main() {
 }
 
 function readState(cookieName) {
-    var cookieIdentifier = `${cookieName}=`;
+    var cookieFinder = `${cookieName}=`;
     var decodedCookie = decodeURIComponent(document.cookie);
     var cookieArray = decodedCookie.split(';');
     for (var i = 0; i < cookieArray.length; i++) {
@@ -116,8 +117,8 @@ function readState(cookieName) {
         while (cookie.charAt(0) == ' ') {
             cookie = cookie.substring(1);
         }
-        if (cookie.indexOf(cookieIdentifier) == 0) {
-            var cookieValue = cookie.substring(cookieIdentifier.length, cookie.length);
+        if (cookie.indexOf(cookieFinder) == 0) {
+            var cookieValue = cookie.substring(cookieFinder.length, cookie.length);
             return State.fromString(cookieValue);
         }
     }

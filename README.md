@@ -34,9 +34,6 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 # Status
 
 TODO:
+* Complete Notification Table
 * Widget for pistes
 * Publish
-* Consider refactoring `notificationsForPistes` into `pistes.notifications: bool`
-* Consider using only json objects instead of classes.
-* Consider making all interesting pistes (shown in widget) configurable: `pistes.interesting: bool`,
-* Consider making all notifications for pistes configurable: `pistes.notifications: bool`

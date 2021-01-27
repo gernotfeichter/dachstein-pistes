@@ -1,44 +1,43 @@
 class State {
-    constructor(pistes, notificationsForPistes) {
+    constructor(pistes) {
         this.pistes = pistes;
-        this.notificationsForPistes = notificationsForPistes;
     }
 
     toString() {
-        return JSON.stringify({ pistes: Array.from(this.pistes), notificationsForPistes: Array.from(this.notificationsForPistes) });
+        return JSON.stringify({ pistes: Array.from(this.pistes) });
     }
 
     static fromString(serializedString) {
         var stateJson = JSON.parse(serializedString);
 
         var pisteObects = stateJson.pistes; // type Object
-        var pistes = []; // type Piste
+        var pistes = []; // Array of type Piste items
         pisteObects.forEach(currentPisteObject => {
-            pistes.push(new Piste(currentPisteObject.name, currentPisteObject.status));
+            pistes.push(new Piste(currentPisteObject.name, currentPisteObject.state, currentPisteObject.notification, currentPisteObject.view));
         });
 
-        return new State(new Set(pistes), new Set(stateJson.notificationsForPistes));
+        return new State(new Set(pistes));
     }
 
     notifyPisteState(pisteNew) {
         console.debug(`notify piste state: ${pisteNew}`);
-        let pisteOld = Array.from(this.pistes).find( obj =>{ return obj.name == pisteNew.name });
-        if ( pisteOld ) {
+        let pisteOld = Array.from(this.pistes).find(obj => { return obj.name == pisteNew.name });
+        if (pisteOld) {
             if (pisteOld.state == pisteNew.state) {
                 console.debug(`piste state of ${pisteNew.name} remains ${pisteNew.state}: no notification`);
-            } else{
-                console.debug(`piste state of ${pisteNew.name} changed from to ${pisteNew.state}: show notification if configured`);
-                if (this.notificationsForPistes.has(pisteNew.name)) {
+            } else {
+                console.debug(`piste state of ${pisteNew.name} changed ${pisteOld.state} from to ${pisteNew.state}: show notification if configured`);
+                if (pisteOld.notification) { // Why not use pisteNew here? -> new Piste objects defaults to false for notifications, need to read from current state here!
                     console.debug(`notification is configured for piste ${pisteNew.name}, showing it to the user`);
                     BrowserNotification.requestPermissionAndShow(`Piste ${pisteNew.name} changed from state ${pisteOld.state} to ${pisteNew.state}!`);
                 } else {
                     console.debug(`notification is not configured for piste ${pisteNew.name}, not showing it to the user`);
                 }
             }
-        } else{
+        } else {
             console.debug(`adding new piste: ${pisteNew}: show notification if configured`);
             this.pistes.add(pisteNew);
-            if (this.notificationsForPistes.has(pisteNew.name)) {
+            if (pisteNew.notification) {
                 console.debug(`notification is configured for piste ${pisteNew.name}, showing it to the user`);
                 BrowserNotification.requestPermissionAndShow(`Piste ${pisteNew.name} changed from state unknown to ${pisteNew.state}!`);
             } else {
@@ -48,12 +47,13 @@ class State {
     }
 
     static default() {
-        let notificationsForPistes = new Set();
-        notificationsForPistes.add("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)");
-        notificationsForPistes.add("Skitour Route Obertraun");
         return new State(
-            new Set(),
-            notificationsForPistes
+            new Set(
+                [
+                    new Piste("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)", Piste.STATE.UNKNOWN, true, true),
+                    new Piste("Skitour Route Obertraun", Piste.STATE.UNKNOWN, true, true)
+                ]
+            )
         );
     }
 

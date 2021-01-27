@@ -1,22 +1,27 @@
 class Piste {
-    constructor(name, status) {
+    constructor(name, status, notification, view) {
         this.name = name;
-        this.status = status;
+        this.state = status;
+        this.notification = notification;
+        this.view = view;
+    }
+
+    setDefaults() {
+        this.name = null;
+        this.state = Piste.STATE.UNKNOWN;
+        this.notification = false;
+        this.view = false;
     }
 
     toString() {
-        return JSON.stringify({ name: this.name, status: this.status });
+        return JSON.stringify({ name: this.name, status: this.state, notification: this.notification, view: this.view });
     }
 
-    static fromString(serializedString) {
-        var pisteJson = JSON.parse(serializedString);
-        return new Piste(pisteJson.name, pisteJson.status);
-    }
-
-    static STATUS = {
+    static STATE = {
         OPEN: 1,
         CLOSED: 2,
-        WARNING: 3
+        WARNING: 3,
+        UNKNOWN: 4
     };
 
 }
