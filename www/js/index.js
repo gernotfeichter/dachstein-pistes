@@ -104,6 +104,7 @@ function main() {
     fetchResult.then(() => {
         console.debug(`write state: ${state}`);
         writeState(state);
+        pisteStatusTable();
     });
 }
 
