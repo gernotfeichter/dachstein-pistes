@@ -77,7 +77,7 @@ function main() {
                             currentPiste.state = Piste.STATE.WARNING
                             continue;
                         }
-                        console.error(`Could not parse piste state for piste of table row ${r} cell ${cellIndex}!`);
+                        console.error(`could not parse piste state for piste of table row ${r} cell ${cellIndex}!`);
                     }
                     // cellIndex == 1 would be type (red, black piste etc.), but irrelevant here
                     // cellIndex == 2 speculation: if type warning there would be a warning text here
@@ -89,7 +89,7 @@ function main() {
                             // update piste state
                             state.notifyPisteState(currentPiste);
                         } else {
-                            console.error(`Could not parse piste name for piste of table row ${r} cell ${cellIndex}!`);
+                            console.error(`could not parse piste name for piste of table row ${r} cell ${cellIndex}!`);
                         }
                     }
                 }
