@@ -22,7 +22,7 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
-    let inveralMilliseconds = 60 * 60 * 1000; // 1h
+    let inveralMilliseconds = 5 * 1000; // 1h
     startMainLoop(inveralMilliseconds);
 }
 

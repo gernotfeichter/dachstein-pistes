@@ -3,19 +3,22 @@ function pisteStateTable(pistes) {
 
   var table = document.createElement('TABLE');
 
-  var tableBody = document.createElement('TBODY');
-  table.appendChild(tableBody);
-
-  ['Piste', 'State', 'Notification', 'View on Widget'].forEach( currentHeader => {
+  var tableHeader = document.createElement('THEAD');
+  table.appendChild(tableHeader);
+  ['Piste', 'State', 'Notification', 'View on Widget'].forEach(currentHeader => {
     let th = document.createElement('TH');
     th.innerText = currentHeader;
-    tableBody.appendChild(th);
+    tableHeader.appendChild(th);
   })
+
+
+  var tableBody = document.createElement('TBODY');
+  table.appendChild(tableBody);
 
   Array.from(pistes).forEach(currentPiste => {
     let tr = document.createElement('TR');
     tableBody.appendChild(tr);
-    ['name', 'state', 'notification', 'view'].forEach( pisteAttribute => {
+    ['name', 'state', 'notification', 'view'].forEach(pisteAttribute => {
       let td = document.createElement('TD');
       if (pisteAttribute == 'notification') {
         let notificationBell = document.createElement("I");
@@ -25,7 +28,7 @@ function pisteStateTable(pistes) {
           notificationBell.className = 'far fa-bell';
         }
         td.appendChild(notificationBell);
-      } else if ( pisteAttribute == 'view' ) {
+      } else if (pisteAttribute == 'view') {
         let viewIcon = document.createElement("I");
         if (currentPiste[pisteAttribute]) {
           viewIcon.className = 'fas fa-eye';
@@ -33,9 +36,9 @@ function pisteStateTable(pistes) {
           viewIcon.className = 'far fa-eye';
         }
         td.appendChild(viewIcon);
-      } else if ( pisteAttribute == 'state' ) {
+      } else if (pisteAttribute == 'state') {
         let statusIcon = document.createElement("I");
-        if (currentPiste[pisteAttribute] == Piste.STATE.CLOSED ) {
+        if (currentPiste[pisteAttribute] == Piste.STATE.CLOSED) {
           statusIcon.className = 'fas fa-ban';
         } else if (currentPiste[pisteAttribute] == Piste.STATE.WARNING) {
           statusIcon.className = 'fas fa-exclamation-triangle';
@@ -54,5 +57,10 @@ function pisteStateTable(pistes) {
     })
   });
 
-  myTableDiv.appendChild(table);
+  if (myTableDiv.children.length == 0) {
+    myTableDiv.appendChild(table);
+  } else {
+    myTableDiv.replaceChild(table, myTableDiv.children[0]);
+  }
+
 }
