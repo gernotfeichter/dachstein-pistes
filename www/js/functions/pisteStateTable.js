@@ -20,7 +20,7 @@ function pisteStateTable(state) {
 
   var tableHeader = document.createElement('THEAD');
   table.appendChild(tableHeader);
-  ['Piste', 'State', 'Notification', 'View on Widget'].forEach(currentHeader => {
+  ['Piste', 'State', 'Notify', 'Widget'].forEach(currentHeader => {
     let th = document.createElement('TH');
     th.innerText = currentHeader;
     tableHeader.appendChild(th);
