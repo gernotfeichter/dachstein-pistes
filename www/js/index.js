@@ -19,115 +19,115 @@
 
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
-document.addEventListener('deviceready', onDeviceReady, false);
+document.addEventListener('deviceready', onDeviceReady, false)
 
 function onDeviceReady() {
-    cordova.plugins.autoStart.enable();
+    cordova.plugins.autoStart.enable()
     let inveralMilliseconds = 60 * 60 * 1000; // 1h
-    startMainLoop(inveralMilliseconds);
+    startMainLoop(inveralMilliseconds)
 }
 
 
 function startMainLoop(inveralMilliseconds) {
-    main();
+    main()
     let intervalId = setInterval(function () {
-        console.debug(`Interval reached: ${inveralMilliseconds}ms passed, refreshing`);
-        main();
-    }, inveralMilliseconds);
+        console.debug(`Interval reached: ${inveralMilliseconds}ms passed, refreshing`)
+        main()
+    }, inveralMilliseconds)
 }
 
 function main() {
-    var state = readState(Cookie.name);
-    console.debug(`read state : ${state}`);
+    var state = readState(Cookie.name)
+    console.debug(`read state : ${state}`)
 
-    console.debug('starting query');
+    console.debug('starting query')
     var fetchResult = fetch('https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht', {
         method: 'GET',
     })
         .then(function (response) {
-            return response.text();
+            return response.text()
         })
         .then(function (html) {
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
+            var parser = new DOMParser()
+            var doc = parser.parseFromString(html, 'text/html')
 
             var table = doc.getElementById('accordion-pisten-dachstein').querySelector('table'),
                 rows = table.rows, rowcount = rows.length, r,
-                cells, cellcount, cellIndex, cell;
+                cells, cellcount, cellIndex, cell
 
-            console.debug("start table scan");
+            console.debug("start table scan")
 
             for (r = 1; r < rowcount; r++) {
-                cells = rows[r].cells;
-                cellcount = cells.length;
-                let currentPiste = new Piste();
-                currentPiste.setDefaults();
+                cells = rows[r].cells
+                cellcount = cells.length
+                let currentPiste = new Piste()
+                currentPiste.setDefaults()
                 for (cellIndex = 0; cellIndex < cellcount; cellIndex++) {
-                    cell = cells[cellIndex];
+                    cell = cells[cellIndex]
                     if (cellIndex == 0) {
                         // parse piste status
-                        let cellString = cell.innerHTML;
+                        let cellString = cell.innerHTML
                         if (cellString.includes("status bg-danger")) {
                             currentPiste.state = Piste.STATE.CLOSED
-                            continue;
+                            continue
                         }
                         if (cellString.includes("status bg-success")) {
                             currentPiste.state = Piste.STATE.OPEN
-                            continue;
+                            continue
                         }
                         if (cellString.includes("status bg-warning")) {
                             currentPiste.state = Piste.STATE.WARNING
-                            continue;
+                            continue
                         }
-                        console.error(`could not parse piste state for piste of table row ${r} cell ${cellIndex}!`);
+                        console.error(`could not parse piste state for piste of table row ${r} cell ${cellIndex}!`)
                     }
                     // cellIndex == 1 would be type (red, black piste etc.), but irrelevant here
                     // cellIndex == 2 speculation: if type warning there would be a warning text here
                     if (cellIndex == 3) {
-                        let cellString = cell.innerText.trim();
+                        let cellString = cell.innerText.trim()
                         // parse piste name
                         if (cellString) {
-                            currentPiste.name = cellString;
+                            currentPiste.name = cellString
                             // update piste state
-                            state.notifyPisteState(currentPiste);
+                            state.notifyPisteState(currentPiste)
                         } else {
-                            console.error(`could not parse piste name for piste of table row ${r} cell ${cellIndex}!`);
+                            console.error(`could not parse piste name for piste of table row ${r} cell ${cellIndex}!`)
                         }
                     }
                 }
             }
-            console.debug("finished table scan without errors");
-            return;
+            console.debug("finished table scan without errors")
+            return
         })
         .catch(function (error) {
-            console.error(error);
+            console.error(error)
         })
 
     fetchResult.then(() => {
-        console.debug(`write state: ${state}`);
-        writeState(state);
-        pisteStateTable(state);
-    });
+        console.debug(`write state: ${state}`)
+        writeState(state)
+        pisteStateTable(state)
+    })
 }
 
 function readState(cookieName) {
-    var cookieFinder = `${cookieName}=`;
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var cookieArray = decodedCookie.split(';');
+    var cookieFinder = `${cookieName}=`
+    var decodedCookie = decodeURIComponent(document.cookie)
+    var cookieArray = decodedCookie.split(';')
     for (var i = 0; i < cookieArray.length; i++) {
-        var cookie = cookieArray[i];
+        var cookie = cookieArray[i]
         while (cookie.charAt(0) == ' ') {
-            cookie = cookie.substring(1);
+            cookie = cookie.substring(1)
         }
         if (cookie.indexOf(cookieFinder) == 0) {
-            var cookieValue = cookie.substring(cookieFinder.length, cookie.length);
-            return State.fromString(cookieValue);
+            var cookieValue = cookie.substring(cookieFinder.length, cookie.length)
+            return State.fromString(cookieValue)
         }
     }
-    return State.default();
+    return State.default()
 }
 
 function writeState(state) {
-    console.debug(`write state: ${state}`);
-    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}; SameSite=${Cookie.sameSite}`;
+    console.debug(`write state: ${state}`)
+    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}; SameSite=${Cookie.sameSite}`
 }

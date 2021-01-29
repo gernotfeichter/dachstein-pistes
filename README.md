@@ -28,7 +28,7 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 * resetting via chrome does not work for webview (at leat for android emultated app)\
   snippet to run in js console for manual reset:
   ```js
-  document.cookie = `${Cookie.name}={};expires=Thu, 01 Jan 1970 00:00:00 GMT;path=<${Cookie.path}`;
+  document.cookie = `${Cookie.name}={};expires=Thu, 01 Jan 1970 00:00:00 GMT;path=<${Cookie.path}`
   ```
 
 # Status
