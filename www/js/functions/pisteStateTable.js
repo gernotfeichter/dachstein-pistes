@@ -1,4 +1,19 @@
-function pisteStateTable(pistes) {
+function onViewChange(state, piste) {
+  console.debug(`onViewChange for ${piste}`);
+  piste.view = !piste.view;
+  writeState(state);
+  pisteStateTable(state);
+}
+
+function onNotificationChange(state, piste) {
+  console.debug(`onNotificationChange for ${piste}`);
+  piste.notification = !piste.notification;
+  writeState(state);
+  pisteStateTable(state);
+}
+
+function pisteStateTable(state) {
+
   var myTableDiv = document.getElementById("pisteStateTable");
 
   var table = document.createElement('TABLE');
@@ -15,7 +30,7 @@ function pisteStateTable(pistes) {
   var tableBody = document.createElement('TBODY');
   table.appendChild(tableBody);
 
-  Array.from(pistes).forEach(currentPiste => {
+  Array.from(state.pistes).forEach(currentPiste => {
     let tr = document.createElement('TR');
     tableBody.appendChild(tr);
     ['name', 'state', 'notification', 'view'].forEach(pisteAttribute => {
@@ -27,6 +42,7 @@ function pisteStateTable(pistes) {
         } else {
           notificationBell.className = 'far fa-bell';
         }
+        notificationBell.addEventListener("click", () => onNotificationChange(state, currentPiste));
         td.appendChild(notificationBell);
       } else if (pisteAttribute == 'view') {
         let viewIcon = document.createElement("I");
@@ -35,6 +51,7 @@ function pisteStateTable(pistes) {
         } else {
           viewIcon.className = 'far fa-eye';
         }
+        viewIcon.addEventListener("click", () => onViewChange(state, currentPiste));
         td.appendChild(viewIcon);
       } else if (pisteAttribute == 'state') {
         let statusIcon = document.createElement("I");

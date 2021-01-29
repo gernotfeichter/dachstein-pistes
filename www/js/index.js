@@ -22,9 +22,10 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
-    let inveralMilliseconds = 5 * 1000; // 1h
+    let inveralMilliseconds = 60 * 60 * 1000; // 1h
     startMainLoop(inveralMilliseconds);
 }
+
 
 function startMainLoop(inveralMilliseconds) {
     main();
@@ -104,7 +105,7 @@ function main() {
     fetchResult.then(() => {
         console.debug(`write state: ${state}`);
         writeState(state);
-        pisteStateTable(state.pistes);
+        pisteStateTable(state);
     });
 }
 
