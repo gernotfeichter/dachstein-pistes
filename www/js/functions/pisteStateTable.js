@@ -40,7 +40,7 @@ function pisteStateTable(state) {
         if (currentPiste[pisteAttribute]) {
           notificationBell.className = 'fas fa-bell';
         } else {
-          notificationBell.className = 'far fa-bell';
+          notificationBell.className = 'far fa-bell-slash';
         }
         notificationBell.addEventListener("click", () => onNotificationChange(state, currentPiste));
         td.appendChild(notificationBell);
@@ -49,7 +49,7 @@ function pisteStateTable(state) {
         if (currentPiste[pisteAttribute]) {
           viewIcon.className = 'fas fa-eye';
         } else {
-          viewIcon.className = 'far fa-eye';
+          viewIcon.className = 'far fa-eye-slash';
         }
         viewIcon.addEventListener("click", () => onViewChange(state, currentPiste));
         td.appendChild(viewIcon);
