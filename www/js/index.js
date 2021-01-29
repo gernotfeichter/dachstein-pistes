@@ -22,6 +22,7 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
+    cordova.plugins.autoStart.enable();
     let inveralMilliseconds = 60 * 60 * 1000; // 1h
     startMainLoop(inveralMilliseconds);
 }

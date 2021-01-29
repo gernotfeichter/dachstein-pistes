@@ -16,6 +16,7 @@
   "devDependencies": {
     "cordova-android": "^9.0.0",
     "cordova-browser": "^6.0.0",
+    "cordova-plugin-autostart": "^2.3.0",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-local-notification": "file:../cordova-plugin-local-notifications/cordova-plugin-local-notifications",
@@ -28,7 +29,8 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-local-notification": {
         "ANDROID_SUPPORT_V4_VERSION": "26.+"
-      }
+      },
+      "cordova-plugin-autostart": {}
     },
     "platforms": [
       "browser",
