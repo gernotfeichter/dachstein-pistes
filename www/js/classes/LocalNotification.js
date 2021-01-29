@@ -1,7 +1,10 @@
 class LocalNotification {
 
+  static notificationCounter = 0;
+
   static requestPermissionAndShow(message) {
     cordova.plugins.notification.local.schedule({
+      id: this.notificationCounter,
       title: message,
       foreground: true,
       autoClear: false,
@@ -12,8 +15,8 @@ class LocalNotification {
       sound: true,
       sticky: false,
       timeoutAfter: false,
-      vibrate: true
+      vibrate: true,
     });
-
+    this.notificationCounter ++;
   }
 }

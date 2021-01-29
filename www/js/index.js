@@ -128,5 +128,6 @@ function readState(cookieName) {
 }
 
 function writeState(state) {
-    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}`;
+    console.debug(`write state: ${state}`);
+    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}; SameSite=${Cookie.sameSite}`;
 }

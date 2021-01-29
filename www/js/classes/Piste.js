@@ -18,10 +18,10 @@ class Piste {
     }
 
     static STATE = {
-        OPEN: 1,
-        CLOSED: 2,
-        WARNING: 3,
-        UNKNOWN: 4
+        OPEN: 'open',
+        CLOSED: 'closed',
+        WARNING: 'warning',
+        UNKNOWN: 'unknown'
     };
 
 }
