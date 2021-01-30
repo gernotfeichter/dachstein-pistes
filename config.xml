@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.dachstein.dashboard" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Dachstein Dashboard</name>
+<widget id="com.dachstein.pistes" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Dachstein Pistes</name>
     <description>
-        Get notifications if piste status changes.
+        Get notifications if piste status changes. For this to work you must not close the application window. The applicaton is in autostart mode.
     </description>
     <author>
         Gernot Feichter

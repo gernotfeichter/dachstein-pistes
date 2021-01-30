@@ -20,19 +20,18 @@ function pisteStateTable(state) {
 
   var tableHeader = document.createElement('THEAD')
   table.appendChild(tableHeader);
-  ['Piste', 'State', 'Notify', 'Widget'].forEach(currentHeader => {
+  ['Piste', 'State', 'Notify'].forEach(currentHeader => {
     let th = document.createElement('TH')
     th.innerText = currentHeader
     tableHeader.appendChild(th)
   })
-
 
   var tableBody = document.createElement('TBODY')
   table.appendChild(tableBody)
   Array.from(state.pistes).forEach(currentPiste => {
     let tr = document.createElement('TR')
     tableBody.appendChild(tr);
-    ['name', 'state', 'notification', 'view'].forEach(pisteAttribute => {
+    ['name', 'state', 'notification'].forEach(pisteAttribute => {
       let td = document.createElement('TD')
       if (pisteAttribute == 'notification') {
         let notificationBell = document.createElement("I")
