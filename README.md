@@ -35,5 +35,7 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 
 TODO:
 * Cookie consent
+* License
 * Icon
+* Change Background Image
 * Publish
