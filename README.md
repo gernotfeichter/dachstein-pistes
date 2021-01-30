@@ -34,6 +34,6 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
 # Status
 
 TODO:
-* Complete Notification Table
-* Widget for pistes
+* Cookie consent
+* Icon
 * Publish
