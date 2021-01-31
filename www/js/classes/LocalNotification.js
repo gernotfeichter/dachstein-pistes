@@ -1,3 +1,4 @@
+// GPL-2.0-only
 class LocalNotification {
 
   static notificationCounter = 0

@@ -1,3 +1,4 @@
+// GPL-2.0-only
 class Piste {
     constructor(name, status, notification, view) {
         this.name = name

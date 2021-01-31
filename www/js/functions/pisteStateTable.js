@@ -1,3 +1,4 @@
+// GPL-2.0-only
 function onViewChange(state, piste) {
   console.debug(`onViewChange for ${piste}`)
   piste.view = !piste.view

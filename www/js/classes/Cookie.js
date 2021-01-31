@@ -1,3 +1,4 @@
+// GPL-2.0-only
 class Cookie {
     static name = "state"
 

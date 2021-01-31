@@ -1,3 +1,4 @@
+// GPL-2.0-only
 class State {
     constructor(pistes, cookiesAccepted) {
         this.pistes = pistes
