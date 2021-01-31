@@ -37,8 +37,9 @@ function startMainLoop(inveralMilliseconds) {
 }
 
 function main() {
-    var state = readState(Cookie.name)
+    var state = State.readState(Cookie.name)
     console.debug(`read state : ${state}`)
+    Cookie.showConsent(state)
 
     console.debug('starting query')
     var fetchResult = fetch('https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht', {
@@ -105,29 +106,9 @@ function main() {
 
     fetchResult.then(() => {
         console.debug(`write state: ${state}`)
-        writeState(state)
+        State.writeState(state)
         pisteStateTable(state)
     })
 }
 
-function readState(cookieName) {
-    var cookieFinder = `${cookieName}=`
-    var decodedCookie = decodeURIComponent(document.cookie)
-    var cookieArray = decodedCookie.split(';')
-    for (var i = 0; i < cookieArray.length; i++) {
-        var cookie = cookieArray[i]
-        while (cookie.charAt(0) == ' ') {
-            cookie = cookie.substring(1)
-        }
-        if (cookie.indexOf(cookieFinder) == 0) {
-            var cookieValue = cookie.substring(cookieFinder.length, cookie.length)
-            return State.fromString(cookieValue)
-        }
-    }
-    return State.default()
-}
 
-function writeState(state) {
-    console.debug(`write state: ${state}`)
-    document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}; SameSite=${Cookie.sameSite}`
-}

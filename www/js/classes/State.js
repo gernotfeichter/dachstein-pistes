@@ -1,22 +1,31 @@
 class State {
-    constructor(pistes) {
+    constructor(pistes, cookiesAccepted) {
         this.pistes = pistes
+        this.cookiesAccepted = cookiesAccepted
     }
 
     toString() {
-        return JSON.stringify({ pistes: Array.from(this.pistes) })
+        return JSON.stringify(
+            {
+                pistes: Array.from(this.pistes),
+                cookiesAccepted: this.cookiesAccepted
+             })
     }
 
     static fromString(serializedString) {
         var stateJson = JSON.parse(serializedString)
 
+        // pistes
         var pisteObects = stateJson.pistes; // type Object
         var pistes = []; // Array of type Piste items
         pisteObects.forEach(currentPisteObject => {
             pistes.push(new Piste(currentPisteObject.name, currentPisteObject.state, currentPisteObject.notification, currentPisteObject.view))
         })
 
-        return new State(new Set(pistes))
+        // cookiesAccepted
+        let cookiesAccepted = stateJson.cookiesAccepted
+
+        return new State(new Set(pistes), cookiesAccepted)
     }
 
     notifyPisteState(pisteNew) {
@@ -61,8 +70,31 @@ class State {
                     new Piste("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)", Piste.STATE.UNKNOWN, true, true),
                     new Piste("Skitour Route Obertraun", Piste.STATE.UNKNOWN, true, true)
                 ]
-            )
+            ),
+            false
         )
+    }
+
+    static writeState(state) {
+        console.debug(`write state: ${state}`)
+        document.cookie = `${Cookie.name}=${state.toString()};expires=${Cookie.expires};path=<${Cookie.path}; SameSite=${Cookie.sameSite}`
+    }
+
+    static readState(cookieName) {
+        var cookieFinder = `${cookieName}=`
+        var decodedCookie = decodeURIComponent(document.cookie)
+        var cookieArray = decodedCookie.split(';')
+        for (var i = 0; i < cookieArray.length; i++) {
+            var cookie = cookieArray[i]
+            while (cookie.charAt(0) == ' ') {
+                cookie = cookie.substring(1)
+            }
+            if (cookie.indexOf(cookieFinder) == 0) {
+                var cookieValue = cookie.substring(cookieFinder.length, cookie.length)
+                return State.fromString(cookieValue)
+            }
+        }
+        return State.default()
     }
 
 }

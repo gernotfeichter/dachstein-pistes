@@ -1,14 +1,14 @@
 function onViewChange(state, piste) {
   console.debug(`onViewChange for ${piste}`)
   piste.view = !piste.view
-  writeState(state)
+  State.writeState(state)
   pisteStateTable(state)
 }
 
 function onNotificationChange(state, piste) {
   console.debug(`onNotificationChange for ${piste}`)
   piste.notification = !piste.notification
-  writeState(state)
+  State.writeState(state)
   pisteStateTable(state)
 }
 
