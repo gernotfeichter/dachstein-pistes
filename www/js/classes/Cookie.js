@@ -15,7 +15,7 @@ class Cookie {
             alert(`
             This app uses cookies.
     
-            If you disagree, do NOT click "OK", instead close and uninstall the app and go back to the stoneage.
+            If you disagree, do NOT click "OK", instead close and uninstall the app.
     
             We use cookies for the following purposes:
             * Store the application state and use settings related to it
