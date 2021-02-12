@@ -37,34 +37,36 @@ function pisteStateTable(state) {
       if (pisteAttribute == 'notification') {
         let notificationBell = document.createElement("I")
         if (currentPiste[pisteAttribute]) {
-          notificationBell.className = 'fas fa-bell'
+          notificationBell.textContent = 'notifications_active'
         } else {
-          notificationBell.className = 'far fa-bell-slash'
+          notificationBell.textContent = 'notifications_off';
         }
+        notificationBell.className = 'material-icons'
         notificationBell.addEventListener("click", () => onNotificationChange(state, currentPiste))
         td.appendChild(notificationBell)
-      } else if (pisteAttribute == 'view') {
+      } else if (pisteAttribute == 'view') { // feature is disabled, currently there is no widget to handle visibility
         let viewIcon = document.createElement("I")
         if (currentPiste[pisteAttribute]) {
-          viewIcon.className = 'fas fa-eye'
+          viewIcon.className = 'view-on'
         } else {
-          viewIcon.className = 'far fa-eye-slash'
+          viewIcon.className = 'view-off'
         }
         viewIcon.addEventListener("click", () => onViewChange(state, currentPiste))
         td.appendChild(viewIcon)
       } else if (pisteAttribute == 'state') {
         let statusIcon = document.createElement("I")
         if (currentPiste[pisteAttribute] == Piste.STATE.CLOSED) {
-          statusIcon.className = 'fas fa-ban'
+          statusIcon.textContent = 'block'
         } else if (currentPiste[pisteAttribute] == Piste.STATE.WARNING) {
-          statusIcon.className = 'fas fa-exclamation-triangle'
+          statusIcon.textContent = 'warning'
         } else if (currentPiste[pisteAttribute] == Piste.STATE.OPEN) {
-          statusIcon.className = 'fas fa-plus-circle'
+          statusIcon.textContent = 'check_box'
         } else if (currentPiste[pisteAttribute] == undefined) {
-          statusIcon.className = 'far fa-question-circle'
+          statusIcon.textContent = 'live_help'
         } else {
           console.error(`invalid piste state ${currentPiste[pisteAttribute]}`)
         }
+        statusIcon.className = 'material-icons';
         td.appendChild(statusIcon)
       } else {
         td.appendChild(document.createTextNode(currentPiste[pisteAttribute]))

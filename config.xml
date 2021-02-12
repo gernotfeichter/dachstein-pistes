@@ -10,19 +10,19 @@
     </author>
     <content src="index.html" />
     <access origin="https://www.derdachstein.at/*" />
-    <access origin="https://kit.fontawesome.com/*" />
-    <access origin="https://ka-f.fontawesome.com/*" />
     <!-- <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
+    <allow-intent href="https://*/*" /> -->
+    <!--
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" /> -->
-    <!-- <platform name="android">
+    <allow-intent href="geo:*" />
+    <platform name="android">
         <allow-intent href="market:*" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
-    </platform> -->
+    </platform>
+    -->
 </widget>

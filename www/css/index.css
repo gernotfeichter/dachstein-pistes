@@ -21,12 +21,14 @@
 }
 
 .notice {
-    color: #fff;
+    color: black;
+    text-shadow: 0 0 5px white;
     text-align: right;
     position: absolute;
     bottom: 10px;
     right: 10px;
     left: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 h1{
@@ -74,9 +76,9 @@ td > i {
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: text;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-user-select: text;                  /* control copy paste, to allow, change 'none' to 'text' */
     background-color: #1B1B1B;
-    background-image:url("https://www.derdachstein.at/website/var/tmp/image-thumbnails/0/2693/thumb__lightbox/sa-24082006---55.jpeg");
+    background-image: url(/img/dachstein.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     font-family: system-ui, -apple-system, -apple-system-font, 'Segoe UI', 'Roboto', sans-serif;
