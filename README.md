@@ -35,13 +35,6 @@ open url in chrome: `chrome://inspect/#devices` and connect to your device (emul
   document.cookie = `${Cookie.name}={};expires=Thu, 01 Jan 1970 00:00:00 GMT;path=<${Cookie.path}`
   ```
 
-## Status
-
-TODO:
-* Icon
-* Change Background Image
-* Publish
-
 ## License
 
 This program is published under the [GNU GENERAL PUBLIC LICENSE
