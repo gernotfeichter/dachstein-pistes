@@ -10,9 +10,9 @@
     </author>
     <content src="index.html" />
     <access origin="https://www.derdachstein.at/*" />
+    <access origin="https://fonts.googleapis.com/*" />
+    <access origin="https://fonts.gstatic.com/*" />
     <!-- <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" /> -->
-    <!--
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
