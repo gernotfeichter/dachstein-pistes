@@ -18,7 +18,7 @@ class Cookie {
             If you disagree, do NOT click "OK", instead close and uninstall the app.
     
             We use cookies for the following purposes:
-            * Store the application state and use settings related to it
+            * Store the application state and user settings related to it
             * This includes the piste names, the state of the piste (open, closed, etc) and whether you want to be notified about piste state changes.
             `)
             state.cookiesAccepted = true;
