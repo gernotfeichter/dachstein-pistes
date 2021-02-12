@@ -12,6 +12,9 @@
     <access origin="https://www.derdachstein.at/*" />
     <access origin="https://fonts.googleapis.com/*" />
     <access origin="https://fonts.gstatic.com/*" />
+    <platform name="android">
+        <icon src="www/img/logo.png" density="hdpi" />
+    </platform>
     <!-- <allow-intent href="http://*/*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
