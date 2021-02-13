@@ -13,7 +13,7 @@
     <access origin="https://fonts.googleapis.com/*" />
     <access origin="https://fonts.gstatic.com/*" />
     <platform name="android">
-        <icon src="www/img/logo.png" density="hdpi" />
+        <icon src="www/img/logo_512x512.png" density="hdpi" />
     </platform>
     <!-- <allow-intent href="http://*/*" />
     <allow-intent href="tel:*" />

@@ -19,6 +19,9 @@ Supporting other platforms is currently not planned.
 `cordova run browser`\
 `cordova run android`
 
+### Release
+`cordova build android --release`
+
 ### Debug
 
 open url in chrome: `chrome://inspect/#devices` and connect to your device (emulator or real phone)
