@@ -3,7 +3,7 @@
 Get notifications when piste state changes and view the current state of all pistes.
 
 ## End User Guide
-Currently only an android version exists and it is not yet published on Google Play store. Instead it must be compiled and installed manually.
+Currently only an android version exists that is published on Google Play store.
 
 Supporting other platforms is currently not planned.
 
