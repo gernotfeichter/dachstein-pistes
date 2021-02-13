@@ -20,7 +20,7 @@ Supporting other platforms is currently not planned.
 `cordova run android`
 
 ### Release
-`cordova build android --release`
+`cordova build android --release -- --keystore=signing/keystore.jks --storePassword=<secret> --alias=key0 --password=<secret>`
 
 ### Debug
 
