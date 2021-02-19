@@ -1,6 +1,6 @@
 <!-- GPL-2.0-only -->
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.dachstein.pistes" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.dachstein.pistes" version="1.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Dachstein Pistes</name>
     <description>
         Get notifications if piste status changes. For this to work you must not close the application window. The applicaton is in autostart mode.
@@ -13,7 +13,7 @@
     <access origin="https://fonts.googleapis.com/*" />
     <access origin="https://fonts.gstatic.com/*" />
     <platform name="android">
-        <icon src="www/img/logo_512x512.png" density="hdpi" />
+        <icon src="images/logo_512x512.png" density="hdpi" />
     </platform>
     <!-- <allow-intent href="http://*/*" />
     <allow-intent href="tel:*" />

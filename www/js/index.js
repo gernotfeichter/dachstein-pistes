@@ -23,8 +23,11 @@ document.addEventListener('deviceready', onDeviceReady, false)
 
 function onDeviceReady() {
     cordova.plugins.autoStart.enable()
-    includeHTML();
-    let inveralMilliseconds = 60 * 60 * 1000; // 1h
+    cordova.plugins.backgroundMode.enable()
+    cordova.plugins.backgroundMode.overrideBackButton()
+    cordova.plugins.backgroundMode.includeToTaskList();
+    includeHTML()
+    let inveralMilliseconds = 60 * 60 * 1000 // 1h
     startMainLoop(inveralMilliseconds)
 }
 
