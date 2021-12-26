@@ -1,8 +1,11 @@
-import 'package:dachstein_pistes/init/init.dart';
+import 'package:dachstein_pistes/db/model.dart';
+import 'package:dachstein_pistes/init/init.dart' as m;
 import 'package:flutter/material.dart';
 
+import 'db/init.dart';
+
 void main() {
-  init();
+  m.init();
   runApp(const MyApp());
 }
 
@@ -51,6 +54,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String pisteString = "None";
 
   void _incrementCounter() {
     setState(() {
@@ -61,6 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    get().then((value) => pisteString = value.pistes.first.name);
   }
 
   @override
@@ -104,6 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Text(
+              pisteString
+            )
           ],
         ),
       ),

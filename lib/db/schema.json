@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Welcome",
+  "definitions": {
+    "Welcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pistes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Piste"
+          }
+        }
+      },
+      "required": [
+        "pistes"
+      ],
+      "title": "Welcome"
+    },
+    "Piste": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["open", "closed", "warning", "unknown"]
+        },
+        "notification": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "notification",
+        "state"
+      ],
+      "title": "Piste"
+    }
+  }
+}
