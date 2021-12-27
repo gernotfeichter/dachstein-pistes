@@ -4,18 +4,15 @@ import 'package:dachstein_pistes/globals/init.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-
 import 'model.dart';
 
-bool initialized = false;
-
-void init() async{
+Future<void> init() async {
   log("init db started");
 
   final prefs = await SharedPreferences.getInstance();
   final appPreferences = prefs.getString(await packageName());
-  if (appPreferences != null) {
-    log("existing preferences could not be bound, initializing");
+  if (appPreferences == null) {
+    log("existing preferences could not be found, initializing");
     final seed = await rootBundle.loadString("lib/db/seed.json");
     final schemaString = await rootBundle.loadString("lib/db/schema.json");
     final jsonSchema = JsonSchema.createSchema(schemaString);
@@ -31,19 +28,12 @@ void init() async{
     }
   }
 
-  initialized = true;
   log("init db finished");
-}
-
-void assertInitialized() {
-  if (!initialized) {
-    init();
-  }
 }
 
 Future<AppSettings> get() async {
   log('db get start');
-  assertInitialized();
+  await init();
   final prefs = await SharedPreferences.getInstance();
   final appPreferences = prefs.getString(await packageName());
   log('db get finished');
@@ -54,7 +44,7 @@ Future<AppSettings> get() async {
 
 void set(AppSettings appSettings) async {
   log('db set start');
-  assertInitialized();
+  await init();
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(
       await packageName(),

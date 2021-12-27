@@ -1,11 +1,7 @@
 import 'dart:developer';
-import 'package:dachstein_pistes/db/init.dart' as db;
 
-void init() {
+void init() async {
   log("init started");
-
-  // db
-  db.init();
 
   // setup alarm manager (androids way of cronjob)
 
