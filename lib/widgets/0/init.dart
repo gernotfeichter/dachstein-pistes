@@ -65,7 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     appSettings = get();
-    setState(() {}); // TODO Gernot
   }
 
   @override
