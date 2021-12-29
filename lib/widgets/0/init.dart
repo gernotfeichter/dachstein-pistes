@@ -81,17 +81,31 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.all(20),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 1,
-          childAspectRatio: 15,
-          children: <Widget>[
-            for (var i in myList) Text(i.toString())
-          ],
-        )
+        body: FutureBuilder<AppSettings>(
+              future: appSettings,
+              builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
+                if (snapshot.hasData) {
+                  List<Widget> widgetList = [];
+                  for (var piste in snapshot.data!.pistes) {
+                    widgetList.add(Text(piste.name));
+                    widgetList.add(Text(piste.state));
+                    widgetList.add(Text(piste.notification.toString()));
+                  }
+                  return GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    childAspectRatio: 15,
+                    children: widgetList
+                  );
+                } else {
+                  return const Text('Could not fetch pistes yet');
+                }
+              }
+            )
+        );
         // FutureBuilder<AppSettings>(
         //   future: appSettings,
         //   builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
@@ -102,7 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
         //     }
         //   }
         // )
-        );
     // floatingActionButton: FloatingActionButton(
     //   onPressed: _refreshState,
     //   tooltip: 'Increment',
