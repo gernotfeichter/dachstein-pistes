@@ -2,6 +2,7 @@ import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -48,16 +49,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<AppSettings> appSettings;
-  List<int> myList = [1,2,3,4]; // TODO Gernot
 
-  void _refreshState() {
+  void _togglePisteNotification(AppSettings? appSettings, Piste piste) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // appSettings without calling setState(), then the build method would
-      // not be called again, and so nothing would appear to happen.
-      appSettings = get();
+      piste.notification = !piste.notification;
+      set(appSettings!);
     });
   }
 
@@ -86,10 +82,16 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
                 if (snapshot.hasData) {
                   List<Widget> widgetList = [];
+                  widgetList.add(const Text("Piste", textAlign: TextAlign.center,));
+                  widgetList.add(const Text("State", textAlign: TextAlign.center,));
+                  widgetList.add(const Text("Notification", textAlign: TextAlign.center,));
                   for (var piste in snapshot.data!.pistes) {
-                    widgetList.add(Text(piste.name));
-                    widgetList.add(Text(piste.state));
-                    widgetList.add(Text(piste.notification.toString()));
+                    widgetList.add(Text(piste.name, textAlign: TextAlign.center,));
+                    widgetList.add(Text(piste.state, textAlign: TextAlign.center,));
+                    widgetList.add(
+                        Checkbox(value: piste.notification,
+                          onChanged: (value) => _togglePisteNotification(snapshot.data, piste),
+                        ));
                   }
                   return GridView.count(
                     primary: false,
@@ -97,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     crossAxisCount: 3,
-                    childAspectRatio: 15,
+                    childAspectRatio: 10,
                     children: widgetList
                   );
                 } else {
@@ -106,20 +108,5 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             )
         );
-        // FutureBuilder<AppSettings>(
-        //   future: appSettings,
-        //   builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
-        //     if (snapshot.hasData) {
-        //       return Text(snapshot.data!.pistes.first.name);
-        //     } else {
-        //       return const Text('Error fetching data from db');
-        //     }
-        //   }
-        // )
-    // floatingActionButton: FloatingActionButton(
-    //   onPressed: _refreshState,
-    //   tooltip: 'Increment',
-    //   child: const Icon(Icons.add),
-    // ), // This trailing comma makes auto-formatting nicer for build methods.
   }
 }
