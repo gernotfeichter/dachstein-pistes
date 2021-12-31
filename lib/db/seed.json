@@ -2,12 +2,12 @@
   "pistes": [
     {
       "name": "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)",
-      "state": "closed",
+      "state": "unknown",
       "notification": true
     },
     {
       "name": "Skitour Route Obertraun",
-      "state": "closed",
+      "state": "unknown",
       "notification": true
     }
   ]

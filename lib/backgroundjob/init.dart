@@ -8,7 +8,7 @@ import 'package:html/parser.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
-Future<void> job() async {
+Future<void> job() async { // TODO Gernot callback handle
   // fetch db state
   AppSettings appSettings = await get();
 
@@ -61,12 +61,21 @@ Future<void> job() async {
             notification: currentPisteNotification
         );
 
-        // and detect diff to "fetch db state"
-        if (oldPiste.state != currentPiste.state) {
+        // and detect diff "web state" to "fetch db state"
+        if (oldPiste.state != currentPiste.state &&
+            currentPiste.notification) {
           log("notification: Piste $currentPisteName changed from state "
               "${oldPiste.state} to ${currentPiste.state}!");
-          notification.init();
+          notification.displayNotification(
+            title: "Dachstein Piste State Changed",
+            body: "${currentPiste.name} changed to ${currentPiste.state}");
         }
+
+        // update db
+        appSettings.pistes.removeWhere(
+                (element) => element.name == currentPisteName);
+        appSettings.pistes.insert(0, currentPiste);
+        set(appSettings);
       }
       counter++;
     }
@@ -92,6 +101,6 @@ bool getPisteNotification(AppSettings appSettings, String pisteName) {
 init() async {
   await AndroidAlarmManager.initialize();
   const int alarmID = 0;
-  await AndroidAlarmManager.oneShot( // TODO Gernot periodic
-      const Duration(minutes: 0), alarmID, job);
+  await AndroidAlarmManager.periodic(
+      const Duration(days: 1), alarmID, job);
 }

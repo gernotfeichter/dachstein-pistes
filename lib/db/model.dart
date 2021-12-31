@@ -48,4 +48,5 @@ class Piste {
     "state": state,
     "notification": notification,
   };
+
 }
