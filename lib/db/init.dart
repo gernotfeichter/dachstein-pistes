@@ -42,7 +42,7 @@ Future<AppSettings> get() async {
   );
 }
 
-void set(AppSettings appSettings) async {
+Future<void> set(AppSettings appSettings) async {
   log('db set start');
   await init();
   final prefs = await SharedPreferences.getInstance();

@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:dachstein_pistes/backgroundjob/init.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
@@ -41,8 +45,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    log("TODO Gernot init state called");
     super.initState();
+    job();
     appSettings = get();
+    // job() and get() are async hence we need to wait a bit till it finished
+    // to get a "live" snapshot for FutureBuilder
+    Timer timer = Timer(const Duration(seconds: 5), () => {
+      setState(() {
+        appSettings = get();
+      })
+    });
   }
 
   @override
@@ -76,21 +89,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 for (var piste in snapshot.data!.pistes) {
                   widgetListContent.add(Center(
                       child: Text(
-                    piste.name,
-                    textAlign: TextAlign.start,
-                  )));
+                        piste.name,
+                        textAlign: TextAlign.start,
+                      )));
                   widgetListContent.add(Center(
                       child: Text(
-                    piste.state,
-                    textAlign: TextAlign.center,
-                  )));
+                        piste.state,
+                        textAlign: TextAlign.center,
+                      )));
                   widgetListContent.add(
                     Center(
                         child: Checkbox(
-                      value: piste.notification,
-                      onChanged: (value) =>
-                          _togglePisteNotification(snapshot.data, piste),
-                    )),
+                          value: piste.notification,
+                          onChanged: (value) =>
+                              _togglePisteNotification(snapshot.data, piste),
+                        )),
                   );
                 }
                 return Column(children: [
@@ -116,7 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: widgetListContent))
                 ]);
               } else {
-                return const Text('Could not fetch pistes yet');
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Could not fetch pistes at all.'),
+                );
               }
             }));
   }

@@ -75,7 +75,7 @@ Future<void> job() async { // TODO Gernot callback handle
         appSettings.pistes.removeWhere(
                 (element) => element.name == currentPisteName);
         appSettings.pistes.insert(0, currentPiste);
-        set(appSettings);
+        await set(appSettings);
       }
       counter++;
     }
