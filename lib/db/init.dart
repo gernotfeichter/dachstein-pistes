@@ -6,11 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'model.dart';
 
-Future<void> init() async {
+Future<void> init({bool testMode = false}) async {
   log("init db started");
 
+  if (testMode) { return; }
+
   final prefs = await SharedPreferences.getInstance();
-  final appPreferences = prefs.getString(await packageName());
+  final appPreferences = prefs.getString(packageName());
   if (appPreferences == null) {
     log("existing preferences could not be found, initializing");
     final seed = await rootBundle.loadString("lib/db/seed.json");
@@ -19,7 +21,7 @@ Future<void> init() async {
     log("validating json schema");
     if (jsonSchema.validate(seed, parseJson: true)) {
       prefs.setString(
-          await packageName(),
+          packageName(),
           seed);
     } else {
       log("schema validation error!", level: 3);
@@ -31,23 +33,23 @@ Future<void> init() async {
   log("init db finished");
 }
 
-Future<AppSettings> get() async {
+Future<AppSettings> get({bool testMode = false}) async {
   log('db get start');
-  await init();
+  await init(testMode: testMode);
   final prefs = await SharedPreferences.getInstance();
-  final appPreferences = prefs.getString(await packageName());
+  final appPreferences = prefs.getString(packageName());
   log('db get finished');
   return AppSettings.fromJson(
     jsonDecode(appPreferences!)
   );
 }
 
-Future<void> set(AppSettings appSettings) async {
+Future<void> set(AppSettings appSettings, {bool testMode = false}) async {
   log('db set start');
-  await init();
+  await init(testMode: testMode);
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(
-      await packageName(),
+      packageName(),
       jsonEncode(appSettings.toJson())
   );
   log('db set finished');

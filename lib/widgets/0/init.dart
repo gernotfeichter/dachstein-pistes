@@ -5,9 +5,7 @@ import 'package:dachstein_pistes/backgroundjob/init.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -51,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     appSettings = get();
     // job() and get() are async hence we need to wait a bit till it finished
     // to get a "live" snapshot for FutureBuilder
-    Timer timer = Timer(const Duration(seconds: 5), () => {
+    Timer(const Duration(seconds: 5), () => {
       setState(() {
         appSettings = get();
       })

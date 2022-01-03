@@ -5,16 +5,24 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:dachstein_pistes/widgets/0/init.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Piste found smoke test', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = const Size(500,1000);
+
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
+    sleep(const Duration(seconds: 5));
+    await tester.pump(const Duration(seconds: 5));
+
     // Verify that pistes are on the list
-    expect(find.text('closed'), findsOneWidget);
+    expect(find.text('closed'), findsWidgets);
 
   });
 }
