@@ -3,6 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:dachstein_pistes/init/init.dart' as m;
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
   m.init();
 }

@@ -6,24 +6,32 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:io';
-import 'dart:ui';
-
+import 'dart:developer';
 import 'package:dachstein_pistes/widgets/0/init.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../global/init.dart';
 
 void main() {
   testWidgets('Piste found smoke test', (WidgetTester tester) async {
-    tester.binding.window.physicalSizeTestValue = const Size(500,1000);
+    log("widget test started");
+
     TestWidgetsFlutterBinding.ensureInitialized();
+    log("ensure initialized");
 
     // Build our app and trigger a frame.
+    MyHomePageState.response = await getStubbedHttpResponse();
     await tester.pumpWidget(const MyApp());
-
-    sleep(const Duration(seconds: 5));
-    await tester.pump(const Duration(seconds: 5));
+    // sleep(const Duration(seconds: 30));
+    // await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     // Verify that pistes are on the list
-    expect(find.text('closed'), findsWidgets);
+    expect(find.text('Piste'), findsWidgets);
+    expect(find.text("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)"), findsWidgets);
+
+    log("widget test finished");
 
   });
 }

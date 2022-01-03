@@ -6,8 +6,10 @@ import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
+
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -21,17 +23,24 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: title),
     );
   }
+
 }
 
 class MyHomePage extends StatefulWidget {
+  
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
+
+  MyHomePageState();
+
+  static http.Response? response;
+
   late Future<AppSettings> appSettings;
 
   void _togglePisteNotification(AppSettings? appSettings, Piste piste) {
@@ -45,14 +54,20 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     log("TODO Gernot init state called");
     super.initState();
-    job();
+    if (response == null) {
+      job();
+    } else {
+      job(responseInput: response);
+    }
     appSettings = get();
     // job() and get() are async hence we need to wait a bit till it finished
     // to get a "live" snapshot for FutureBuilder
     Timer(const Duration(seconds: 5), () => {
-      setState(() {
-        appSettings = get();
-      })
+      if (mounted) {
+        setState(() {
+          appSettings = get();
+        })
+      }
     });
   }
 
@@ -134,4 +149,5 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             }));
   }
+  
 }

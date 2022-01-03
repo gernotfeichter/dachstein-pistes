@@ -1,22 +1,26 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/notification/init.dart' as notification;
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
-Future<AppSettings> job({http.Response? response}) async {
+Future<AppSettings> job({http.Response? responseInput}) async {
   // fetch db state
   AppSettings appSettings = await get();
 
   // fetch web state
   const url =
       'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
-  http.Response httpResponse = response ?? await http.get(Uri.parse(url));
+  if (responseInput == null) {
+    log("response was null, awaiting it");
+  } else {
+    log("response was given, do not perform any http request");
+  }
+  http.Response httpResponse = responseInput ?? await http.get(Uri.parse(url));
+  log("response was ${httpResponse.body}");
   if (httpResponse.statusCode >= 200 &&
       httpResponse.statusCode < 300) {
     var document = parse(httpResponse.body);
