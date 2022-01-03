@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dachstein_pistes/db/init.dart';
@@ -10,23 +9,14 @@ import 'package:html/parser.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
-Future<AppSettings> job({bool testMode = false}) async {
+Future<AppSettings> job({http.Response? response}) async {
   // fetch db state
-  AppSettings appSettings = testMode ? AppSettings(pistes: [
-    Piste(name: "TestPiste",
-      state: "closed",
-      notification: false)
-  ]): await get();
+  AppSettings appSettings = await get();
 
   // fetch web state
   const url =
       'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
-  http.Response httpResponse = testMode ? http.Response(
-    await rootBundle.loadString("test/backgroundjob/gletschbericht.html"),
-      200,
-      headers: {HttpHeaders.contentTypeHeader: 'text/html; charset=UTF-8'})
-      :
-    await http.get(Uri.parse(url));
+  http.Response httpResponse = response ?? await http.get(Uri.parse(url));
   if (httpResponse.statusCode >= 200 &&
       httpResponse.statusCode < 300) {
     var document = parse(httpResponse.body);
@@ -82,7 +72,7 @@ Future<AppSettings> job({bool testMode = false}) async {
         appSettings.pistes.removeWhere(
                 (element) => element.name == currentPisteName);
         appSettings.pistes.insert(0, currentPiste);
-        await set(appSettings, testMode: testMode);
+        await set(appSettings);
       }
       counter++;
     }

@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('Piste found smoke test', (WidgetTester tester) async {
     tester.binding.window.physicalSizeTestValue = const Size(500,1000);
+    TestWidgetsFlutterBinding.ensureInitialized();
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());

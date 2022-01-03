@@ -6,10 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'model.dart';
 
-Future<void> init({bool testMode = false}) async {
+Future<void> init() async {
   log("init db started");
-
-  if (testMode) { return; }
 
   final prefs = await SharedPreferences.getInstance();
   final appPreferences = prefs.getString(packageName());
@@ -33,9 +31,9 @@ Future<void> init({bool testMode = false}) async {
   log("init db finished");
 }
 
-Future<AppSettings> get({bool testMode = false}) async {
+Future<AppSettings> get() async {
   log('db get start');
-  await init(testMode: testMode);
+  await init();
   final prefs = await SharedPreferences.getInstance();
   final appPreferences = prefs.getString(packageName());
   log('db get finished');
@@ -44,9 +42,9 @@ Future<AppSettings> get({bool testMode = false}) async {
   );
 }
 
-Future<void> set(AppSettings appSettings, {bool testMode = false}) async {
+Future<void> set(AppSettings appSettings) async {
   log('db set start');
-  await init(testMode: testMode);
+  await init();
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(
       packageName(),
