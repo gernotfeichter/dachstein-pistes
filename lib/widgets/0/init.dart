@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:isolate';
 
 import 'package:dachstein_pistes/backgroundjob/init.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
@@ -37,11 +39,17 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
 
-  MyHomePageState();
+  MyHomePageState() {
+    ReceivePort receivePort = ReceivePort("backgroundJobFinished");
+    sendPort = receivePort.sendPort;
+    receivePort.listen((message) { _backgroundJobFinished(); });
+  }
 
   static http.Response? response;
 
   late Future<AppSettings> appSettings;
+
+  static late SendPort sendPort;
 
   void _togglePisteNotification(AppSettings? appSettings, Piste piste) {
     setState(() {
@@ -49,26 +57,21 @@ class MyHomePageState extends State<MyHomePage> {
       set(appSettings!);
     });
   }
+  
+  Future<void> _backgroundJobFinished() async {
+    log("message channel: message received");
+    setState(() {
+      log("background job finished, refreshing ui");
+      appSettings = get();
+    });
+  }
 
   @override
   void initState() {
-    log("TODO Gernot init state called");
+    log("init state called");
     super.initState();
-    if (response == null) {
-      job();
-    } else {
-      job(responseInput: response);
-    }
+    job();
     appSettings = get();
-    // job() and get() are async hence we need to wait a bit till it finished
-    // to get a "live" snapshot for FutureBuilder
-    Timer(const Duration(seconds: 5), () => {
-      if (mounted) {
-        setState(() {
-          appSettings = get();
-        })
-      }
-    });
   }
 
   @override
@@ -149,5 +152,5 @@ class MyHomePageState extends State<MyHomePage> {
               }
             }));
   }
-  
+
 }

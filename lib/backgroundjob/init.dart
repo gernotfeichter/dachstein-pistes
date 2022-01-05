@@ -1,31 +1,35 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:isolate';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/notification/init.dart' as notification;
-import 'package:http/http.dart' as http;
+import 'package:dachstein_pistes/widgets/0/init.dart';
+import 'package:flutter/services.dart';
 import 'package:html/parser.dart';
+import 'package:http/http.dart' as http;
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-
-Future<AppSettings> job({http.Response? responseInput}) async {
+Future<void> job() async {
   // fetch db state
   AppSettings appSettings = await get();
 
   // fetch web state
   const url =
       'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
-  if (responseInput == null) {
+/*  if (responseInput == null) {
     log("response was null, awaiting it");
   } else {
     log("response was given, do not perform any http request");
-  }
-  http.Response httpResponse = responseInput ?? await http.get(Uri.parse(url));
-  log("response was ${httpResponse.body}");
-  if (httpResponse.statusCode >= 200 &&
-      httpResponse.statusCode < 300) {
+  }*/
+  http.Response httpResponse = /*responseInput ??*/ await http.get(Uri.parse(url));
+  log("response was ${httpResponse.body.substring(0,100)} (rest truncated)");
+  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
     var document = parse(httpResponse.body);
-    var table = document.getElementById('accordion-pisten-dachstein')
-    !.querySelector('table');
+    var table = document
+        .getElementById('accordion-pisten-dachstein')!
+        .querySelector('table');
     var tableData = table!.getElementsByTagName('td');
     var counter = 0;
     String currentPisteState = "unknown";
@@ -42,67 +46,62 @@ Future<AppSettings> job({http.Response? responseInput}) async {
         }
       } else if (counter % 4 == 3) {
         var currentPisteName = element.text.trim();
-        bool currentPisteNotification = getPisteNotification(
-            appSettings,
-            currentPisteName
-        );
+        bool currentPisteNotification =
+            getPisteNotification(appSettings, currentPisteName);
         var oldPiste = appSettings.pistes.firstWhere(
-                (element) => element.name == currentPisteName,
-                orElse: () {
-                  return Piste(
-                    name: currentPisteName,
-                    state: "unknown",
-                    notification: false
-                  );
-                },
+          (element) => element.name == currentPisteName,
+          orElse: () {
+            return Piste(
+                name: currentPisteName, state: "unknown", notification: false);
+          },
         );
         var currentPiste = Piste(
             name: currentPisteName,
             state: currentPisteState,
-            notification: currentPisteNotification
-        );
+            notification: currentPisteNotification);
 
         // and detect diff "web state" to "fetch db state"
-        if (oldPiste.state != currentPiste.state &&
-            currentPiste.notification) {
+        if (oldPiste.state != currentPiste.state && currentPiste.notification) {
           log("notification: Piste $currentPisteName changed from state "
               "${oldPiste.state} to ${currentPiste.state}!");
           notification.displayNotification(
-            title: "Dachstein Piste State Changed",
-            body: "${currentPiste.name} changed to ${currentPiste.state}");
+              title: "Dachstein Piste State Changed",
+              body: "${currentPiste.name} changed to ${currentPiste.state}");
         }
 
         // update db
-        appSettings.pistes.removeWhere(
-                (element) => element.name == currentPisteName);
+        appSettings.pistes
+            .removeWhere((element) => element.name == currentPisteName);
         appSettings.pistes.insert(0, currentPiste);
-        await set(appSettings);
       }
       counter++;
     }
+    await set(appSettings);
+
+    // notify main thread (ui)
+    notifyMainThread();
   } else {
     throw Exception("http get for url $url returned status "
         "${httpResponse.statusCode} and "
         "content ${httpResponse.body}");
   }
-  return appSettings;
 }
 
 bool getPisteNotification(AppSettings appSettings, String pisteName) {
   return appSettings.pistes
-      .firstWhere(
-          (element) => element.name == pisteName,
-      orElse: () =>
-          Piste(
-              name: null.toString(),
-              state: 'unknown',
-              notification: false))
+      .firstWhere((element) => element.name == pisteName,
+          orElse: () => Piste(
+              name: null.toString(), state: 'unknown', notification: false))
       .notification;
+}
+
+void notifyMainThread() {
+  SendPort sendPort = MyHomePageState.sendPort;
+  sendPort.send(true);
 }
 
 init() async {
   await AndroidAlarmManager.initialize();
   const int alarmID = 0;
-  await AndroidAlarmManager.periodic(
-      const Duration(hours: 1), alarmID, job);
+  await AndroidAlarmManager.periodic(const Duration(hours: 1), alarmID, job);
 }

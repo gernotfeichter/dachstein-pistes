@@ -8,7 +8,7 @@ and flutter version `2.8.1`.
 
 ## test execution
 
-### unit tests
+### unit tests (currently there are none)
 `flutter test`
 
 ### widget tests
@@ -16,8 +16,7 @@ The widget tests can only be successfully run, with the `flutter run` instead of
 command for some reason, here is the snippet that works:
 `flutter run -t test/widget/test_widget.dart -v -d linux`
 Caveat: This command seems to run forever.
-
-Ideas: 
+Better use the [integration tests](#integration-tests) below.
 
 ### integration tests
-TODO: Could possibly solve the widgets test problem, but right now there are none.
+`flutter test integration_test/test.dart -d "Pixel 5" --timeout 60s`
