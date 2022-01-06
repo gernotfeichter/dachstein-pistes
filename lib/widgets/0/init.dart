@@ -74,6 +74,11 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var columnWidths = const {
+      0: FlexColumnWidth(5),
+      1: FlexColumnWidth(2),
+      2: FlexColumnWidth(3),
+    };
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -130,13 +135,16 @@ class MyHomePageState extends State<MyHomePage> {
                         padding: const EdgeInsets.all(8),
                         child: Table(
                           children: widgetListHeader,
+                          columnWidths: columnWidths
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Table(
                           children: widgetListContent,
-                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                          defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                          columnWidths: columnWidths
                           // border: TableBorder.all(),
                         ),
                       ),
