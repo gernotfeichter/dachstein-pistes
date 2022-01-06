@@ -87,11 +87,13 @@ class MainPageState extends State<MainPage> {
     job();
     appSettings = get();
     Timer timer = Timer(const Duration(minutes: 1), () {
+      log("timed refresh of ui");
       setState(() {
         // Refresh ui every minute, as this is the maximum amount of refresh
         // frequency as per config and equals Android Alarm Manager limitation).
         // Normally the SendPort would communicate that it is finished,
         // but retrieving the static Handle to
+        appSettings = get();
       });
     });
   }
@@ -181,7 +183,7 @@ class MainPageState extends State<MainPage> {
                     Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
-                              "last refreshed at " +
+                              "last refreshed: " +
                                   snapshot.data!.refreshSettings.last,
                           ),
                         )
