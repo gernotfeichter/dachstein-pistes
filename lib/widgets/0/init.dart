@@ -86,7 +86,7 @@ class MainPageState extends State<MainPage> {
     super.initState();
     job();
     appSettings = get();
-    Timer timer = Timer(const Duration(minutes: 1), () {
+    Timer timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
       log("timed refresh of ui");
       setState(() {
         // Refresh ui every minute, as this is the maximum amount of refresh
