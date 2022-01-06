@@ -31,7 +31,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
               title: const Text("Pistes"),
               onTap: () {
                 switchPageAndCloseDrawer(
-                    MainPageState.instance.pistesPageFutureBuilder());
+                    pistesPageFutureBuilder());
               },
             ),
             ListTile(
