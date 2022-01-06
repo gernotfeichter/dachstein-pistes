@@ -7,11 +7,10 @@ import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
-
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -25,11 +24,9 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: title),
     );
   }
-
 }
 
 class MyHomePage extends StatefulWidget {
-  
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
@@ -38,11 +35,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-
   MyHomePageState() {
     ReceivePort receivePort = ReceivePort("backgroundJobFinished");
     sendPort = receivePort.sendPort;
-    receivePort.listen((message) { _backgroundJobFinished(); });
+    receivePort.listen((message) {
+      _backgroundJobFinished();
+    });
   }
 
   static http.Response? response;
@@ -57,7 +55,7 @@ class MyHomePageState extends State<MyHomePage> {
       set(appSettings!);
     });
   }
-  
+
   Future<void> _backgroundJobFinished() async {
     log("message channel: message received");
     setState(() {
@@ -85,72 +83,72 @@ class MyHomePageState extends State<MyHomePage> {
             builder:
                 (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
               if (snapshot.hasData) {
-                List<Widget> widgetListHeader = [];
-                List<Widget> widgetListContent = [];
-                widgetListHeader.add(const Text(
-                  "Piste",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ));
-                widgetListHeader.add(const Text(
-                  "State",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ));
-                widgetListHeader.add(const Text(
-                  "Notification",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ));
+                List<TableRow> widgetListHeader = [];
+                List<TableRow> widgetListContent = [];
+                widgetListHeader.add(const TableRow(children: [
+                  Text(
+                    "Piste",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "State",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "Notification",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  )
+                ]));
                 for (var piste in snapshot.data!.pistes) {
-                  widgetListContent.add(Center(
-                      child: Text(
-                        piste.name,
-                        textAlign: TextAlign.start,
-                      )));
-                  widgetListContent.add(Center(
-                      child: Text(
-                        piste.state,
-                        textAlign: TextAlign.center,
-                      )));
-                  widgetListContent.add(
-                    Center(
-                        child: Checkbox(
+                  widgetListContent.add(TableRow(
+                      children: [
+                        Text(
+                          piste.name,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          piste.state,
+                          textAlign: TextAlign.center,
+                        ),
+                        Checkbox(
                           value: piste.notification,
                           onChanged: (value) =>
                               _togglePisteNotification(snapshot.data, piste),
-                        )),
-                  );
-                }
-                return Column(children: [
-                  Flexible(
-                      flex: 1,
-                      child: GridView.count(
-                          primary: false,
-                          padding: const EdgeInsets.all(20),
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 30,
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.3,
-                          children: widgetListHeader)),
-                  Flexible(
-                      flex: 15,
-                      child: GridView.count(
-                          primary: false,
-                          padding: const EdgeInsets.all(20),
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 30,
-                          crossAxisCount: 3,
-                          childAspectRatio: 1.3,
-                          children: widgetListContent))
-                ]);
-              } else {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Could not fetch pistes at all.'),
+                        )
+                      ]
+                  )
                 );
               }
-            }));
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Table(
+                          children: widgetListHeader,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Table(
+                          children: widgetListContent,
+                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                          // border: TableBorder.all(),
+                        ),
+                      ),
+                    ]
+                ),
+              );
+            } else {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Could not fetch pistes at all.'),
+              );
+            }
+          }));
   }
-
 }
