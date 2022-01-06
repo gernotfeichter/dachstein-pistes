@@ -19,7 +19,7 @@ void main() {
     log("ensure initialized");
 
     // Build our app and trigger a frame.
-    MyHomePageState.response = await getStubbedHttpResponse();
+    MainPageState.response = await getStubbedHttpResponse();
     await tester.pumpWidget(const MyApp());
     // sleep(const Duration(seconds: 30));
     // await tester.pump();

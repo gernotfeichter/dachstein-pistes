@@ -13,16 +13,20 @@ String appSettingsToJson(AppSettings data) => json.encode(data.toJson());
 class AppSettings {
   AppSettings({
     required this.pistes,
+    required this.refreshSettings,
   });
 
   List<Piste> pistes;
+  RefreshSettings refreshSettings;
 
   factory AppSettings.fromJson(Map<String, dynamic> json) => AppSettings(
     pistes: List<Piste>.from(json["pistes"].map((x) => Piste.fromJson(x))),
+    refreshSettings: RefreshSettings.fromJson(json["refreshSettings"]),
   );
 
   Map<String, dynamic> toJson() => {
     "pistes": List<dynamic>.from(pistes.map((x) => x.toJson())),
+    "refreshSettings": refreshSettings.toJson(),
   };
 }
 
@@ -49,4 +53,24 @@ class Piste {
     "notification": notification,
   };
 
+}
+
+class RefreshSettings {
+  RefreshSettings({
+    required this.interval,
+    required this.last,
+  });
+
+  int interval;
+  String last;
+
+  factory RefreshSettings.fromJson(Map<String, dynamic> json) => RefreshSettings(
+    interval: json["interval"],
+    last: json["last"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "interval": interval,
+    "last": last,
+  };
 }

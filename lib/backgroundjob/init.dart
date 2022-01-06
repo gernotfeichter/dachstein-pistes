@@ -7,7 +7,6 @@ import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/notification/init.dart' as notification;
 import 'package:dachstein_pistes/widgets/0/init.dart';
-import 'package:flutter/services.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,11 +17,6 @@ Future<void> job() async {
   // fetch web state
   const url =
       'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
-/*  if (responseInput == null) {
-    log("response was null, awaiting it");
-  } else {
-    log("response was given, do not perform any http request");
-  }*/
   http.Response httpResponse = /*responseInput ??*/ await http.get(Uri.parse(url));
   log("response was ${httpResponse.body.substring(0,100)} (rest truncated)");
   if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
@@ -73,6 +67,7 @@ Future<void> job() async {
         appSettings.pistes
             .removeWhere((element) => element.name == currentPisteName);
         appSettings.pistes.insert(0, currentPiste);
+        appSettings.refreshSettings.last = DateTime.now().toString();
       }
       counter++;
     }
@@ -96,12 +91,20 @@ bool getPisteNotification(AppSettings appSettings, String pisteName) {
 }
 
 void notifyMainThread() {
-  SendPort sendPort = MyHomePageState.sendPort;
-  sendPort.send(true);
+  try {
+    SendPort sendPort = MainPageState.instance.getSendPort();
+    sendPort.send(true);
+  } on Exception catch (_) {
+    log("When called by ui this will not throw an exception, but when called "
+        "from AlarmManager, this will throw this Exception that is safe to "
+        "ignore!");
+  }
 }
 
 init() async {
   await AndroidAlarmManager.initialize();
   const int alarmID = 0;
-  await AndroidAlarmManager.periodic(const Duration(hours: 1), alarmID, job);
+  AppSettings appSettings = await get();
+  await AndroidAlarmManager.periodic(
+      Duration(minutes: appSettings.refreshSettings.interval), alarmID, job);
 }

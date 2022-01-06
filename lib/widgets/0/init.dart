@@ -7,8 +7,9 @@ import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
+
+import 'nagivation.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -21,33 +22,42 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: title),
+      home: const MainPage(title: title),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  State<MyHomePage> createState() => MyHomePageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
-  MyHomePageState() {
-    ReceivePort receivePort = ReceivePort("backgroundJobFinished");
-    sendPort = receivePort.sendPort;
-    receivePort.listen((message) {
-      _backgroundJobFinished();
-    });
+class MainPageState extends State<MainPage> {
+  MainPageState() {
+    currentPage = pistesPageFutureBuilder();
+    appSettings = get();
+    instance = this;
   }
+
+  static late MainPageState instance;
+
+  late Widget currentPage;
 
   static http.Response? response;
 
   late Future<AppSettings> appSettings;
 
-  static late SendPort sendPort;
+  SendPort getSendPort() {
+    ReceivePort receivePort = ReceivePort("backgroundJobFinished");
+    SendPort sendPort = receivePort.sendPort;
+    receivePort.listen((message) {
+      _backgroundJobFinished();
+    });
+    return sendPort;
+  }
 
   void _togglePisteNotification(AppSettings? appSettings, Piste piste) {
     setState(() {
@@ -64,99 +74,126 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void switchPage(Widget widget){
+    setState(() {
+      currentPage = widget;
+    });
+  }
+
   @override
   void initState() {
     log("init state called");
     super.initState();
     job();
     appSettings = get();
+    Timer timer = Timer(const Duration(minutes: 1), () {
+      setState(() {
+        // Refresh ui every minute, as this is the maximum amount of refresh
+        // frequency as per config and equals Android Alarm Manager limitation).
+        // Normally the SendPort would communicate that it is finished,
+        // but retrieving the static Handle to
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        drawer: const NavigationDrawerWidget(),
+        body: currentPage);
+  }
+
+  FutureBuilder<AppSettings> pistesPageFutureBuilder() {
     var columnWidths = const {
       0: FlexColumnWidth(5),
       1: FlexColumnWidth(2),
       2: FlexColumnWidth(3),
     };
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: FutureBuilder<AppSettings>(
-            future: appSettings,
-            builder:
-                (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
-              if (snapshot.hasData) {
-                List<TableRow> widgetListHeader = [];
-                List<TableRow> widgetListContent = [];
-                widgetListHeader.add(const TableRow(children: [
-                  Text(
-                    "Piste",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    "State",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    "Notification",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  )
-                ]));
-                for (var piste in snapshot.data!.pistes) {
-                  widgetListContent.add(TableRow(
-                      children: [
-                        Text(
-                          piste.name,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          piste.state,
-                          textAlign: TextAlign.center,
-                        ),
-                        Checkbox(
-                          value: piste.notification,
-                          onChanged: (value) =>
-                              _togglePisteNotification(snapshot.data, piste),
-                        )
-                      ]
-                  )
-                );
-              }
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Table(
-                          children: widgetListHeader,
-                          columnWidths: columnWidths
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Table(
-                          children: widgetListContent,
-                          defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                          columnWidths: columnWidths
-                          // border: TableBorder.all(),
-                        ),
-                      ),
-                    ]
+    appSettings = get();
+    return FutureBuilder<AppSettings>(
+          future: appSettings,
+          builder:
+              (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
+            if (snapshot.hasData) {
+              List<TableRow> widgetListHeader = [];
+              List<TableRow> widgetListContent = [];
+              widgetListHeader.add(const TableRow(children: [
+                Text(
+                  "Piste",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
-              );
-            } else {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('Could not fetch pistes at all.'),
+                Text(
+                  "State",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Notification",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                )
+              ]));
+              for (var piste in snapshot.data!.pistes) {
+                widgetListContent.add(TableRow(
+                    children: [
+                      Text(
+                        piste.name,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        piste.state,
+                        textAlign: TextAlign.center,
+                      ),
+                      Checkbox(
+                        value: piste.notification,
+                        onChanged: (value) =>
+                            _togglePisteNotification(snapshot.data, piste),
+                      )
+                    ]
+                )
               );
             }
-          }));
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Table(
+                        children: widgetListHeader,
+                        columnWidths: columnWidths
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Table(
+                        children: widgetListContent,
+                        defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                        columnWidths: columnWidths
+                        // border: TableBorder.all(),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                              "last refreshed at " +
+                                  snapshot.data!.refreshSettings.last,
+                          ),
+                        )
+                  ]
+              ),
+            );
+          } else {
+            return const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text('Could not fetch pistes at all.'),
+            );
+          }
+        });
   }
 }
