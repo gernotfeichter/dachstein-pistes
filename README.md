@@ -22,4 +22,4 @@ Better use the [integration tests](#integration-tests) below.
 `flutter test integration_test/test.dart -d "Pixel 5" --timeout 60s`
 
 ## TODOS
-[] bug: after changing 
+[] bug?: W/AlarmService(  751): Attempted to start a duplicate background isolate. Returning...

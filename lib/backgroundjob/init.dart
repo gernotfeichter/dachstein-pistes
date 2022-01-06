@@ -103,14 +103,16 @@ init() async {
   const int alarmID = 0;
   AppSettings appSettings = await get();
   int interval = appSettings.refreshSettings.interval;
+  // delete old
+  try {
+    AndroidAlarmManager.cancel(alarmID);
+  } catch (_) {
+    log("error cancelling alarm with id $alarmID");
+  }
+
+  // schedule new
   if (interval != 0){
     await AndroidAlarmManager.periodic(
         Duration(minutes: interval), alarmID, job);
-  } else {
-    try {
-      AndroidAlarmManager.cancel(alarmID);
-    } catch (_) {
-      log("error cancelling alarm with id $alarmID");
-    }
   }
 }
