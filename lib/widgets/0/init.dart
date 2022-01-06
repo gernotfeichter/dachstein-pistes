@@ -39,9 +39,11 @@ class MainPageState extends State<MainPage> {
   MainPageState() {
     currentPage = pistesPageFutureBuilder();
     instance = this;
+    instanceSet = true;
   }
 
-  static late MainPageState instance;
+  static late  MainPageState instance;
+  static bool instanceSet = false;
 
   late Widget currentPage;
 
@@ -70,7 +72,10 @@ class MainPageState extends State<MainPage> {
 
   void appSettingsUpdate() {
     setState(() {
-      currentPage = pistesPageFutureBuilder();
+      if (currentPage is FutureBuilder<AppSettings>) {
+        log("currentPage is FutureBuilder<AppSettings>, refreshing ui");
+        currentPage = pistesPageFutureBuilder();
+      }
     });
   }
 
@@ -85,7 +90,7 @@ class MainPageState extends State<MainPage> {
     log("init state called");
     super.initState();
     job();
-    Timer timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
+    Timer.periodic(const Duration(minutes: 1), (Timer t) {
       log("timed refresh of ui");
       setState(() {
         // Refresh ui every minute, as this is the maximum amount of refresh

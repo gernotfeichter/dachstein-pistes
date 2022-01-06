@@ -20,3 +20,6 @@ Better use the [integration tests](#integration-tests) below.
 
 ### integration tests
 `flutter test integration_test/test.dart -d "Pixel 5" --timeout 60s`
+
+## TODOS
+[] bug: after changing 

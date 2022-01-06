@@ -91,13 +91,10 @@ bool getPisteNotification(AppSettings appSettings, String pisteName) {
 }
 
 void notifyMainThread() {
-  try {
+  // actually can be null!
+  if (MainPageState.instanceSet) {
     SendPort sendPort = MainPageState.instance.getSendPort();
     sendPort.send(true);
-  } on Exception catch (_) {
-    log("When called by ui this will not throw an exception, but when called "
-        "from AlarmManager, this will throw this Exception that is safe to "
-        "ignore!");
   }
 }
 
@@ -105,6 +102,15 @@ init() async {
   await AndroidAlarmManager.initialize();
   const int alarmID = 0;
   AppSettings appSettings = await get();
-  await AndroidAlarmManager.periodic(
-      Duration(minutes: appSettings.refreshSettings.interval), alarmID, job);
+  int interval = appSettings.refreshSettings.interval;
+  if (interval != 0){
+    await AndroidAlarmManager.periodic(
+        Duration(minutes: interval), alarmID, job);
+  } else {
+    try {
+      AndroidAlarmManager.cancel(alarmID);
+    } catch (_) {
+      log("error cancelling alarm with id $alarmID");
+    }
+  }
 }

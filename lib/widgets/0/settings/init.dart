@@ -1,3 +1,4 @@
+import 'package:dachstein_pistes/backgroundjob/init.dart' as bg;
 import 'package:dachstein_pistes/backgroundjob/init.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
@@ -45,7 +46,8 @@ class SettingsPageState extends State<SettingsPage> {
                   AppSettings appSettings = await get();
                   appSettings.refreshSettings.interval = value;
                   await set(appSettings);
-                  job();
+                  await job();
+                  bg.init();
                 } else {
                   valueString = "60";
                 }
