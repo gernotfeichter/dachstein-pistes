@@ -23,3 +23,4 @@ Better use the [integration tests](#integration-tests) below.
 
 ## TODOS
 [] bug?: W/AlarmService(  751): Attempted to start a duplicate background isolate. Returning...
+[] reset interval in seed to 60 minutes

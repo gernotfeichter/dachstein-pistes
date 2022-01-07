@@ -91,7 +91,8 @@ bool getPisteNotification(AppSettings appSettings, String pisteName) {
 }
 
 void notifyMainThread() {
-  // actually can be null!
+  // instance actually can be null if run through AlarmManager,
+  // which is the main use case!
   if (MainPageState.instanceSet) {
     SendPort sendPort = MainPageState.instance.getSendPort();
     sendPort.send(true);
@@ -103,16 +104,18 @@ init() async {
   const int alarmID = 0;
   AppSettings appSettings = await get();
   int interval = appSettings.refreshSettings.interval;
-  // delete old
-  try {
-    AndroidAlarmManager.cancel(alarmID);
-  } catch (_) {
-    log("error cancelling alarm with id $alarmID");
-  }
 
-  // schedule new
-  if (interval != 0){
+  if (interval != 0) {
+    // schedule new
     await AndroidAlarmManager.periodic(
         Duration(minutes: interval), alarmID, job);
+  } else {
+    // delete old
+    try {
+      AndroidAlarmManager.cancel(alarmID);
+    } catch (_) {
+      log("error cancelling alarm with id $alarmID");
+    }
+
   }
 }

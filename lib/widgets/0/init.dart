@@ -58,11 +58,10 @@ class MainPageState extends State<MainPage> {
     return sendPort;
   }
 
-  void _togglePisteNotification(AppSettings? appSettings, Piste piste) {
-    setState(() {
-      piste.notification = !piste.notification;
-      set(appSettings!);
-    });
+  void _togglePisteNotification(AppSettings? appSettings, Piste piste) async {
+    piste.notification = !piste.notification;
+    await set(appSettings!);
+    appSettingsUpdate();
   }
 
   Future<void> _backgroundJobFinished() async {
@@ -92,13 +91,11 @@ class MainPageState extends State<MainPage> {
     job();
     Timer.periodic(const Duration(minutes: 1), (Timer t) {
       log("timed refresh of ui");
-      setState(() {
         // Refresh ui every minute, as this is the maximum amount of refresh
         // frequency as per config and equals Android Alarm Manager limitation).
         // Normally the SendPort would communicate that it is finished,
         // but retrieving the static Handle to
         appSettingsUpdate();
-      });
     });
   }
 
