@@ -42,6 +42,7 @@ dependencies:
   html: ^0.15.0
   flutter_local_notifications: ^9.1.5
   logging_to_logcat: ^0.0.4
+  synchronized: ^3.0.0
 
 dev_dependencies:
   flutter_test:

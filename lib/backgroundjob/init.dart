@@ -89,6 +89,7 @@ Future<void> job() async {
         counter++;
       }
       log.info("update db");
+      log.info("date=${appSettings.refreshSettings.last}");
       await set(appSettings);
 
       // notify main thread (ui)
@@ -114,8 +115,9 @@ bool getPisteNotification(AppSettings appSettings, String pisteName) {
 }
 
 void notifyMainThread() {
-  // instance actually can be null if run through AlarmManager,
-  // which is the main use case!
+  // instance actually can be null if run through AlarmManager because
+  // it has no ui and no ui state,
+  // which is the main use case for this method!
   if (MainPageState.instanceSet) {
     SendPort sendPort = MainPageState.instance.getSendPort();
     sendPort.send(true);

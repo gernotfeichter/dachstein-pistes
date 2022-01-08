@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dachstein_pistes/backgroundjob/init.dart';
@@ -9,7 +10,7 @@ import 'package:dachstein_pistes/globals/init.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'nagivation.dart';
+import 'navigation.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -36,18 +37,17 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  MainPageState() {
-    currentPage = pistesPageFutureBuilder();
-    instance = this;
-    instanceSet = true;
-  }
 
   static late  MainPageState instance;
   static bool instanceSet = false;
 
   late Widget currentPage;
 
+  late Future<AppSettings> appSettings;
+
   static http.Response? response;
+
+  late Timer timer;
 
   SendPort getSendPort() {
     ReceivePort receivePort = ReceivePort("backgroundJobFinished");
@@ -71,9 +71,12 @@ class MainPageState extends State<MainPage> {
 
   void appSettingsUpdate() {
     setState(() {
+      appSettings = get();
       if (currentPage is FutureBuilder<AppSettings>) {
         log("currentPage is FutureBuilder<AppSettings>, refreshing ui");
+        log("oldCurrentPage=${currentPage.hashCode}");
         currentPage = pistesPageFutureBuilder();
+        log("newCurrentPage=${currentPage.hashCode}");
       }
     });
   }
@@ -86,17 +89,40 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    log("init state called");
+    log("initState called");
     super.initState();
+    instance = this;
+    instanceSet = true;
+    appSettings = get();
+    currentPage = pistesPageFutureBuilder();
     job();
-    Timer.periodic(const Duration(minutes: 1), (Timer t) {
+    timer = Timer.periodic(const Duration(minutes: 1), (Timer t) async {
       log("timed refresh of ui");
         // Refresh ui every minute, as this is the maximum amount of refresh
         // frequency as per config and equals Android Alarm Manager limitation).
         // Normally the SendPort would communicate that it is finished,
         // but retrieving the static Handle to
+        AppSettings appSettingsSnapshot = await get();
+        log("attempting refresh ui with date = "
+            "${appSettingsSnapshot.refreshSettings.last} (pid=$pid)");
         appSettingsUpdate();
     });
+  }
+
+
+  @override
+  void didUpdateWidget(MainPage oldWidget) {
+    log("didUpdateWidget called");
+    super.didUpdateWidget(oldWidget);
+    appSettings = get();
+    currentPage = pistesPageFutureBuilder();
+  }
+
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
