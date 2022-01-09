@@ -27,7 +27,7 @@ Future<void> job() async {
     // fetch web state
     const url =
         'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
-    http.Response httpResponse = /*responseInput ??*/ await http.get(
+    http.Response httpResponse = MainPageState.response ?? await http.get(
         Uri.parse(url));
     logger.info(
         "response was ${httpResponse.body.substring(0, 100)} (rest truncated)");

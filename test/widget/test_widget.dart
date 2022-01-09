@@ -13,14 +13,20 @@ import '../global/init.dart';
 
 void main() {
   testWidgets('widget test: load stubbed pistes', (WidgetTester tester) async {
+
     // Given: Widget is stared
     logger.info("widget test started");
     TestWidgetsFlutterBinding.ensureInitialized();
-    MainPageState.response = await getStubbedHttpResponse();
+    MainPageState.response = await tester.runAsync(() async {
+      return await getStubbedHttpResponse();
+    });
+    loggerInitialized = true;
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    // When: I wait till the pistes are fetched
+    /* I don't fully understand why I need this here, but it works:
+    * snippet runAsync was taken from
+    * https://github.com/flutter/flutter/issues/50783 */
     await tester.runAsync(() async {
       await Future.delayed(const Duration(seconds: 10), () async {
         await tester.pumpAndSettle();
@@ -28,11 +34,12 @@ void main() {
         // Then: Verify that pistes are on the list
         expect(find.text('Piste'), findsWidgets);
         expect(find.text(
-        "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)"),
-        findsWidgets);
+            "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)"),
+            findsWidgets);
         expect(find.text(
-        "Mittersteinabfahrt"), findsWidgets);
+            "Mittersteinabfahrt"), findsWidgets);
       });
     });
+
   });
 }
