@@ -8,7 +8,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
 import 'package:dachstein_pistes/notification/init.dart' as notification;
-import 'package:dachstein_pistes/widgets/0/init.dart';
+import 'package:dachstein_pistes/widgets/init.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 

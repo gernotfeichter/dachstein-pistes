@@ -10,7 +10,7 @@ import 'package:dachstein_pistes/logging/init.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'navigation.dart';
+import 'navigation/navigation.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -43,9 +43,7 @@ class MainPageState extends State<MainPage> {
 
   late Widget currentPage;
 
-  late Future<AppSettings> appSettings;
-
-  static http.Response? response;
+  static http.Response? response; // only used for mocking
 
   late Timer timer;
 
@@ -71,7 +69,6 @@ class MainPageState extends State<MainPage> {
 
   void appSettingsUpdate() {
     setState(() {
-      appSettings = get();
       if (currentPage is FutureBuilder<AppSettings>) {
         logger.info("currentPage is FutureBuilder<AppSettings>, refreshing ui");
         logger.info("oldCurrentPage=${currentPage.hashCode}");
@@ -93,7 +90,6 @@ class MainPageState extends State<MainPage> {
     super.initState();
     instance = this;
     instanceSet = true;
-    appSettings = get();
     currentPage = pistesPageFutureBuilder();
     job();
     timer = Timer.periodic(const Duration(minutes: 1), (Timer t) async {
@@ -108,16 +104,6 @@ class MainPageState extends State<MainPage> {
         appSettingsUpdate();
     });
   }
-
-
-  @override
-  void didUpdateWidget(MainPage oldWidget) {
-    logger.info("didUpdateWidget called");
-    super.didUpdateWidget(oldWidget);
-    appSettings = get();
-    currentPage = pistesPageFutureBuilder();
-  }
-
 
   @override
   void dispose() {
@@ -222,7 +208,10 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
         } else {
           return const Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text('Could not fetch pistes at all.'),
+            child: Text('Could not fetch pistes yet. If this does not go '
+                'away quickly, it may be caused by network problems. '
+                'Are you connected to the internet? Otherwise, uninstalling'
+                'and then reinstalling might help!'),
           );
         }
       });

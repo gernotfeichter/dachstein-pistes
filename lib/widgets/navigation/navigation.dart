@@ -1,7 +1,7 @@
-import 'package:dachstein_pistes/widgets/0/settings/init.dart';
+import 'package:dachstein_pistes/widgets/settings/init.dart';
 import 'package:flutter/material.dart';
 
-import 'init.dart';
+import '../init.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
 
