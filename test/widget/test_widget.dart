@@ -4,8 +4,7 @@
 // utility that Flutter provides. For example, you can send tap and scroll
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
-
-import 'dart:developer';
+import 'package:dachstein_pistes/logging/init.dart';
 import 'package:dachstein_pistes/widgets/0/init.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -13,10 +12,10 @@ import '../global/init.dart';
 
 void main() {
   testWidgets('Piste found smoke test', (WidgetTester tester) async {
-    log("widget test started");
+    logger.info("widget test started");
 
     TestWidgetsFlutterBinding.ensureInitialized();
-    log("ensure initialized");
+    logger.info("ensure initialized");
 
     // Build our app and trigger a frame.
     MainPageState.response = await getStubbedHttpResponse();
@@ -29,7 +28,7 @@ void main() {
     expect(find.text('Piste'), findsWidgets);
     expect(find.text("Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)"), findsWidgets);
 
-    log("widget test finished");
+    logger.info("widget test finished");
 
   });
 }

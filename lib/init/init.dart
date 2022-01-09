@@ -1,12 +1,17 @@
-import 'dart:developer';
-
 import 'package:dachstein_pistes/backgroundjob/init.dart' as bg;
+import 'package:dachstein_pistes/logging/init.dart' as lg;
+import 'package:flutter/cupertino.dart';
 
-void init() async {
-  log("init started");
+Future<void> init() async {
+  lg.logger.info("init started");
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // setup logging (makes sure to also log to androids logcat)
+  lg.init();
 
   // setup alarm manager (androids way of cronjob)
   bg.init();
 
-  log("init finished");
+  lg.logger.info("init finished");
 }

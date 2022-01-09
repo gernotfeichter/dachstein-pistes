@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:dachstein_pistes/logging/init.dart';
 import 'package:logging/logging.dart';
 import 'package:logging_to_logcat/logging_to_logcat.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -137,13 +137,14 @@ init() async {
         alarmID,
         job,
         allowWhileIdle: true,
+        wakeup: true,
         rescheduleOnReboot: true);
   } else {
     // delete old
     try {
       AndroidAlarmManager.cancel(alarmID);
     } catch (_) {
-      log("error cancelling alarm with id $alarmID");
+      logger.info("error cancelling alarm with id $alarmID");
     }
 
   }
