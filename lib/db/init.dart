@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:shared_preferences/shared_preferences.dart';

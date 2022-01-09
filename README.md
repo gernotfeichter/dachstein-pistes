@@ -31,7 +31,6 @@ Better use the [integration tests](#integration-tests) below.
 ### integration tests
 `flutter test integration_test/test.dart -d "Pixel 5" --timeout 60s`
 
-## TODOS
+## TODO Gernot
 [] bug?: W/AlarmService(  751): Attempted to start a duplicate background isolate. Returning...
 [] reset interval in seed to 60 minutes
-[] complete unit test AppSettings
