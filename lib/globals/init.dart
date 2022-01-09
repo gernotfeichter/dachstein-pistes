@@ -4,3 +4,4 @@ String packageName() {
 
 const String title = "Dachstein Pistes";
 
+bool testMode = false;

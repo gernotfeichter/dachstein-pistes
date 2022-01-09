@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +43,7 @@ Future<AppSettings> get() async {
     logger.info('db get start');
     await init();
     final prefs = await SharedPreferences.getInstance();
+    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     logger.info('db get finished');
@@ -62,6 +64,7 @@ Future<void> set(AppSettings appSettings) async {
 
     await init();
     final prefs = await SharedPreferences.getInstance();
+    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     prefs.setString(
         packageName(),

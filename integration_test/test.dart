@@ -6,12 +6,13 @@ import 'package:dachstein_pistes/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets("happy path test", (WidgetTester tester) async {
+  testWidgets("integration test: load real pistes", (WidgetTester tester) async {
     // Given: Application is stared
     app.main();
+    await tester.pumpAndSettle();
 
     // When: I wait till the pistes are fetched
-    Future.delayed(const Duration(seconds: 10), () async {
+    await Future.delayed(const Duration(seconds: 10), () async {
       await tester.pumpAndSettle();
 
       // Then: Verify that pistes are on the list
