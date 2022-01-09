@@ -133,7 +133,11 @@ init() async {
   if (interval != 0) {
     // schedule new
     await AndroidAlarmManager.periodic(
-        Duration(minutes: interval), alarmID, job, allowWhileIdle: true);
+        Duration(minutes: interval),
+        alarmID,
+        job,
+        allowWhileIdle: true,
+        rescheduleOnReboot: true);
   } else {
     // delete old
     try {
