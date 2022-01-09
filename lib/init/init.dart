@@ -8,7 +8,7 @@ Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // setup logging (makes sure to also log to androids logcat)
-  lg.init();
+  lg.init(lg.logger);
 
   // setup alarm manager (androids way of cronjob)
   bg.init();

@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
-import 'package:dachstein_pistes/logging/init.dart';
+import 'package:dachstein_pistes/logging/init.dart'  as lg;
 import 'package:logging/logging.dart';
-import 'package:logging_to_logcat/logging_to_logcat.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dachstein_pistes/db/init.dart';
 import 'package:dachstein_pistes/db/model.dart';
@@ -13,12 +12,13 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> job() async {
-  Logger.root.activateLogcat();
-  final Logger log = Logger("DachsteinPistesJobLogger");
+  final Logger logger = Logger("DachsteinPistesJobLogger");
+  lg.init(logger);
 
   try {
-    log.info(
+    logger.info(
         "job started: MainPageState.instanceSet=${MainPageState.instanceSet} "
+            "isolate=${Isolate.current.hashCode} "
             "pid=$pid");
 
     // fetch db state
@@ -29,7 +29,7 @@ Future<void> job() async {
         'https://www.derdachstein.at/de/dachstein-aktuell/gletscherbericht';
     http.Response httpResponse = /*responseInput ??*/ await http.get(
         Uri.parse(url));
-    log.info(
+    logger.info(
         "response was ${httpResponse.body.substring(0, 100)} (rest truncated)");
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
       var document = parse(httpResponse.body);
@@ -69,10 +69,10 @@ Future<void> job() async {
               notification: currentPisteNotification);
 
           // and detect diff "web state" to "fetch db state"
-          log.info("detect diff");
+          logger.info("detect diff");
           if (oldPiste.state != currentPiste.state &&
               currentPiste.notification) {
-            log.info("notification: Piste $currentPisteName changed from state "
+            logger.info("notification: Piste $currentPisteName changed from state "
                 "${oldPiste.state} to ${currentPiste.state}!");
             notification.displayNotification(
                 title: "Dachstein Piste State Changed",
@@ -80,7 +80,7 @@ Future<void> job() async {
           }
 
           // update db
-          log.info("prepare update db");
+          logger.info("prepare update db");
           appSettings.pistes
               .removeWhere((element) => element.name == currentPisteName);
           appSettings.pistes.insert(0, currentPiste);
@@ -88,21 +88,21 @@ Future<void> job() async {
         }
         counter++;
       }
-      log.info("update db");
-      log.info("date=${appSettings.refreshSettings.last}");
+      logger.info("update db");
+      logger.info("date=${appSettings.refreshSettings.last}");
       await set(appSettings);
 
       // notify main thread (ui)
-      log.info("notifyMainThread");
+      logger.info("notifyMainThread");
       notifyMainThread();
-      log.info("job finished successfully");
+      logger.info("job finished successfully");
     } else {
       throw Exception("http get for url $url returned status "
           "${httpResponse.statusCode} and "
           "content ${httpResponse.body}");
     }
   } catch (e) {
-    log.warning("job failed with error ${e.toString()}");
+    logger.warning("job failed with error ${e.toString()}");
   }
 }
 
@@ -144,7 +144,7 @@ init() async {
     try {
       AndroidAlarmManager.cancel(alarmID);
     } catch (_) {
-      logger.info("error cancelling alarm with id $alarmID");
+      lg.logger.info("error cancelling alarm with id $alarmID");
     }
 
   }
