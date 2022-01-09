@@ -43,8 +43,10 @@ dependencies:
   flutter_local_notifications: ^9.1.5
   logging_to_logcat: ^0.0.4
   synchronized: ^3.0.0
+  test: ^1.17.12
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 

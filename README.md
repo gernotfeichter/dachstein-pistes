@@ -8,8 +8,9 @@ and flutter version `2.8.1`.
 
 ## test execution
 
-### unit tests (currently there are none)
+### unit tests
 `flutter test`
+Remark: Executes all files in test folder ending in test.dart!
 
 ### widget tests
 The widget tests can only be successfully run, with the `flutter run` instead of the `flutter test`
@@ -33,3 +34,4 @@ Better use the [integration tests](#integration-tests) below.
 ## TODOS
 [] bug?: W/AlarmService(  751): Attempted to start a duplicate background isolate. Returning...
 [] reset interval in seed to 60 minutes
+[] complete unit test AppSettings
