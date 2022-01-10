@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dachstein_pistes/globals/init.dart';
 import 'package:json_schema2/json_schema2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ Future<void> init() async {
     logger.info("init db started");
 
     final prefs = await SharedPreferences.getInstance();
+    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     if (appPreferences == null) {
@@ -67,6 +69,7 @@ Future<void> set(AppSettings appSettings) async {
         packageName(),
         jsonEncode(appSettings.toJson())
     );
+    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
 
     // TODO Gernot start
     String actualDate = (await get()).refreshSettings.last;
