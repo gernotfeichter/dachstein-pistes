@@ -37,8 +37,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-
-  static late  MainPageState instance;
+  static late MainPageState instance;
   static bool instanceSet = false;
 
   late Widget currentPage;
@@ -78,7 +77,7 @@ class MainPageState extends State<MainPage> {
     });
   }
 
-  void switchPage(Widget widget){
+  void switchPage(Widget widget) {
     setState(() {
       currentPage = widget;
     });
@@ -94,14 +93,14 @@ class MainPageState extends State<MainPage> {
     job();
     timer = Timer.periodic(const Duration(minutes: 1), (Timer t) async {
       logger.info("timed refresh of ui");
-        // Refresh ui every minute, as this is the maximum amount of refresh
-        // frequency as per config and equals Android Alarm Manager limitation).
-        // Normally the SendPort would communicate that it is finished,
-        // but retrieving the static Handle to
-        AppSettings appSettingsSnapshot = await get();
-        logger.info("attempting refresh ui with date = "
-            "${appSettingsSnapshot.refreshSettings.last} (pid=$pid)");
-        appSettingsUpdate();
+      // Refresh ui every minute, as this is the maximum amount of refresh
+      // frequency as per config and equals Android Alarm Manager limitation).
+      // Normally the SendPort would communicate that it is finished,
+      // but retrieving the static Handle to
+      AppSettings appSettingsSnapshot = await get();
+      logger.info("attempting refresh ui with date = "
+          "${appSettingsSnapshot.refreshSettings.last} (pid=$pid)");
+      appSettingsUpdate();
     });
   }
 
@@ -120,7 +119,6 @@ class MainPageState extends State<MainPage> {
         drawer: const NavigationDrawerWidget(),
         body: currentPage);
   }
-
 }
 
 FutureBuilder<AppSettings> pistesPageFutureBuilder() {
@@ -129,11 +127,12 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
     1: FlexColumnWidth(2),
     2: FlexColumnWidth(3),
   };
+  const Color transparentWhite =
+      Color.fromRGBO(255, 255, 255, 0.5019607843137255);
   Future<AppSettings> appSettings = get();
   return FutureBuilder<AppSettings>(
       future: appSettings,
-      builder:
-          (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
         if (snapshot.hasData) {
           List<TableRow> widgetListHeader = [];
           List<TableRow> widgetListContent = [];
@@ -155,24 +154,21 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
             )
           ]));
           for (var piste in snapshot.data!.pistes) {
-            widgetListContent.add(TableRow(
-                children: [
-                  Text(
-                    piste.name,
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    piste.state,
-                    textAlign: TextAlign.center,
-                  ),
-                  Checkbox(
-                    value: piste.notification,
-                    onChanged: (value) =>
-                        MainPageState.instance._togglePisteNotification(snapshot.data, piste),
-                  )
-                ]
-            )
-            );
+            widgetListContent.add(TableRow(children: [
+              Text(
+                piste.name,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                piste.state,
+                textAlign: TextAlign.center,
+              ),
+              Checkbox(
+                value: piste.notification,
+                onChanged: (value) => MainPageState.instance
+                    ._togglePisteNotification(snapshot.data, piste),
+              )
+            ]));
           }
           return Stack(
             children: [
@@ -189,42 +185,51 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
                       repeat: ImageRepeat.noRepeat,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(
-                      color: const Color.fromRGBO(
-                          255, 255, 255, 0.5019607843137255),
-                      height: 300,
-                      child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Table(
-                                  children: widgetListHeader,
-                                  columnWidths: columnWidths
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Table(
-                                  children: widgetListContent,
-                                  defaultVerticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                                  columnWidths: columnWidths
-                                // border: TableBorder.all(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Text(
-                                "last refreshed: " +
-                                    snapshot.data!.refreshSettings.last,
-                              ),
-                            ),
-                          ]
+                  Column(children: [
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        color: transparentWhite,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 32,
+                            left: 8,
+                            right: 8
+                          ),
+                          child: Table(
+                              children: widgetListHeader,
+                              columnWidths: columnWidths),
+                        ),
                       ),
                     ),
-                  ),
+                    Flexible(
+                      flex: 10,
+                      child: Container(
+                        color: transparentWhite,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Table(
+                              children: widgetListContent,
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              columnWidths: columnWidths
+                              // border: TableBorder.all(),
+                              ),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                          color: transparentWhite,
+                          child: Center(
+                              child: Text(
+                            "last refreshed: " +
+                                snapshot.data!.refreshSettings.last,
+                          ))),
+                    ),
+                    Flexible(flex: 10, child: Container())
+                  ]),
                 ],
               )
             ],
