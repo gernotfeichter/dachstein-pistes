@@ -6,6 +6,10 @@ Project was created with command
 `flutter create --org com.gernotfeichter dachstein_pistes`
 and flutter version `2.8.1`.
 
+## build & installation without debug flag
+`flutter build apk`
+`adb install ./build/app/outputs/apk/release/app-release.apk`
+
 ## test execution
 
 ### unit tests
