@@ -29,7 +29,7 @@ that those
 Better use the [integration tests](#integration-tests) below.
 
 ### integration tests
-`flutter test integration_test/test.dart -d "Pixel 5" --timeout 60s`
+`flutter test integration_test/test.dart -d "Pixel 5" --timeout 120s`
 
 ## TODO Gernot
 [] bug?: W/AlarmService(  751): Attempted to start a duplicate background isolate. Returning...
