@@ -174,36 +174,60 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
             )
             );
           }
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          return Stack(
+            children: [
+              Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Table(
-                        children: widgetListHeader,
-                        columnWidths: columnWidths
-                    ),
+                  Container(
+                    color: const Color.fromRGBO(99, 148, 201, 1.0),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Table(
-                        children: widgetListContent,
-                        defaultVerticalAlignment:
-                        TableCellVerticalAlignment.middle,
-                        columnWidths: columnWidths
-                      // border: TableBorder.all(),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    child: const Image(
+                      image: AssetImage(
+                          "resources/images/dachstein_background.jpg"),
+                      repeat: ImageRepeat.noRepeat,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text(
-                      "last refreshed: " +
-                          snapshot.data!.refreshSettings.last,
+                    child: Container(
+                      color: const Color.fromRGBO(
+                          255, 255, 255, 0.5019607843137255),
+                      height: 300,
+                      child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Table(
+                                  children: widgetListHeader,
+                                  columnWidths: columnWidths
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Table(
+                                  children: widgetListContent,
+                                  defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                                  columnWidths: columnWidths
+                                // border: TableBorder.all(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Text(
+                                "last refreshed: " +
+                                    snapshot.data!.refreshSettings.last,
+                              ),
+                            ),
+                          ]
+                      ),
                     ),
-                  )
-                ]
-            ),
+                  ),
+                ],
+              )
+            ],
           );
         } else {
           return const Padding(
