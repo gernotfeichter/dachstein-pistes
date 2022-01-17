@@ -27,8 +27,7 @@ Caveat: This command seems to run forever.
 
 I believe that `flutter test` does not work due to some platform specific functionality that I use 
 in some of my widget code that is only available in a real android application, the standard 
-widget test environment seems to be not able to provide those. This unfortunately also means
-that those 
+widget test environment seems to be not able to provide those.
 
 Better use the [integration tests](#integration-tests) below.
 
