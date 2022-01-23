@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "dachstein_pistes")
-set(APPLICATION_ID "com.gernotfeichter.dachstein_pistes")
+set(APPLICATION_ID "com.dachstein.pistes")
 
 cmake_policy(SET CMP0063 NEW)
 

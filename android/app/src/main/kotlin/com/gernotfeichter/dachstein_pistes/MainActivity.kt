@@ -1,4 +1,4 @@
-package com.gernotfeichter.dachstein_pistes
+package com.dachstein.pistes
 
 import io.flutter.embedding.android.FlutterActivity
 
