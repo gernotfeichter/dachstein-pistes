@@ -40,3 +40,10 @@ Better use the [integration tests](#integration-tests) below.
 3. upload [app bundle](build/app/outputs/bundle/release/app-release.aab) to 
    [Google Play Console](https://play.google.com/console)
    
+## TODO Gernot
+[] last refreshed overlaps pistes
+[] first launch on Pixel 5 via play store failed with exception:
+```
+01-27 20:29:28.962  9397  9397 I DachsteinPistesJobLogger: job started: MainPageState.instanceSet=true isolate=336844168 pid=9397
+01-27 20:29:29.570  9397  9397 W DachsteinPistesJobLogger: job failed with error Null check operator used on a null value
+```
