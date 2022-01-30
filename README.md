@@ -35,7 +35,9 @@ Better use the [integration tests](#integration-tests) below.
 `flutter test integration_test/test.dart -d "Pixel 5" --timeout 120s`
 
 ## releasing
+1. run [integration tests](#integration-tests)
 1. increase version number in [pubspec.yaml](pubspec.yaml)
-2. `flutter build appbundle`
-3. upload [app bundle](build/app/outputs/bundle/release/app-release.aab) to 
-   [Google Play Console](https://play.google.com/console)
+1. `flutter build appbundle`
+1. upload [app bundle](build/app/outputs/bundle/release/app-release.aab) to 
+   [Google Play Console](https://play.google.com/console) for Internal Testing
+1. commit state: `g commit -a -m "chore(release): <version number>"`   
