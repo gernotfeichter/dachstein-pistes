@@ -51,7 +51,8 @@ Better use the [integration tests](#integration-tests) below.
 1. `flutter build appbundle`
 1. upload [app bundle](build/app/outputs/bundle/release/app-release.aab) to 
    [Google Play Console](https://play.google.com/console) for Internal Testing
-1. commit state: `g commit -a -m "chore(release): <version number>"`   
+1. commit state: `g commit -a -m "chore(release): <version number>"`
+1. After successful internal test, promote to production
 
 ## License
 
