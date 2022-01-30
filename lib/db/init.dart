@@ -28,7 +28,6 @@ Future<void> init() async {
 
     final prefs = await SharedPreferences.getInstance();
     // see shared_preferences_bugs_anchor at top
-    sleep(const Duration(milliseconds: 200));
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     if (appPreferences == null) {
@@ -58,6 +57,8 @@ Future<AppSettings> get() async {
     logger.info('db get start');
     await init();
     final prefs = await SharedPreferences.getInstance();
+    // see shared_preferences_bugs_anchor at top
+    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     logger.info('db get finished');
@@ -72,10 +73,10 @@ Future<void> set(AppSettings appSettings) async {
   await lock.synchronized(() async {
     logger.info('db set start');
 
-    // TODO Gernot start
+/*    // TODO Gernot start
     // see shared_preferences_bugs_anchor at top
     String expectedDate = appSettings.refreshSettings.last;
-    // TODO Gernot end
+    // TODO Gernot end*/
 
     await init();
     final prefs = await SharedPreferences.getInstance();
@@ -84,15 +85,13 @@ Future<void> set(AppSettings appSettings) async {
         packageName(),
         jsonEncode(appSettings.toJson())
     );
-    // see shared_preferences_bugs_anchor at top
-    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
 
-    // TODO Gernot start
+/*    // TODO Gernot start
     // see shared_preferences_bugs_anchor at top
     String actualDate = (await get()).refreshSettings.last;
     logger.info("asserting $actualDate == $expectedDate");
     assert(actualDate == expectedDate);
-    // TODO Gernot end
+    // TODO Gernot end*/
 
     logger.info('db set finished');
   });
