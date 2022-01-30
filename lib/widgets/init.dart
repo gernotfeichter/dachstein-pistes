@@ -10,7 +10,7 @@ import 'package:dachstein_pistes/logging/init.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'navigation/navigation.dart';
+import 'navigation/init.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -122,11 +122,6 @@ class MainPageState extends State<MainPage> {
 }
 
 FutureBuilder<AppSettings> pistesPageFutureBuilder() {
-  var columnWidths = const {
-    0: FlexColumnWidth(5),
-    1: FlexColumnWidth(2),
-    2: FlexColumnWidth(3),
-  };
   const Color transparentWhite =
       Color.fromRGBO(255, 255, 255, 0.5019607843137255);
   Future<AppSettings> appSettings = get();
@@ -134,104 +129,80 @@ FutureBuilder<AppSettings> pistesPageFutureBuilder() {
       future: appSettings,
       builder: (BuildContext context, AsyncSnapshot<AppSettings> snapshot) {
         if (snapshot.hasData) {
-          List<TableRow> widgetListHeader = [];
-          List<TableRow> widgetListContent = [];
-          widgetListHeader.add(const TableRow(children: [
-            Text(
+          List<DataColumn> widgetListHeader = [];
+          List<DataRow> widgetListContent = [];
+          widgetListHeader.add(const DataColumn(
+            label: Text(
               "Piste",
               style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            Text(
+          ));
+          widgetListHeader.add(const DataColumn(
+            label: Text(
               "State",
               style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            Text(
+          ));
+          widgetListHeader.add(const DataColumn(
+            label: Text(
               "Notification",
               style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
-            )
-          ]));
+            ),
+          ));
           for (var piste in snapshot.data!.pistes) {
-            widgetListContent.add(TableRow(children: [
-              Text(
-                piste.name,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                piste.state,
-                textAlign: TextAlign.center,
-              ),
-              Checkbox(
+            widgetListContent.add(DataRow(cells: [
+              DataCell(SizedBox(
+                child: Text(
+                    piste.name,
+                ),
+                width: 150,
+              )),
+              DataCell(Text(piste.state)),
+              DataCell(Checkbox(
                 value: piste.notification,
                 onChanged: (value) => MainPageState.instance
                     ._togglePisteNotification(snapshot.data, piste),
-              )
+              )),
             ]));
           }
           return Stack(
             children: [
-              Stack(
-                children: [
-                  Container(
-                    color: const Color.fromRGBO(99, 148, 201, 1.0),
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: const Image(
-                      image: AssetImage(
-                          "resources/images/dachstein_background.jpg"),
-                      repeat: ImageRepeat.noRepeat,
-                    ),
-                  ),
-                  Column(children: [
-                    Flexible(
-                      flex: 2,
-                      child: Container(
-                        color: transparentWhite,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 32,
-                            left: 8,
-                            right: 8
-                          ),
-                          child: Table(
-                              children: widgetListHeader,
-                              columnWidths: columnWidths),
-                        ),
+              Container(
+                color: const Color.fromRGBO(99, 148, 201, 1.0),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: const Image(
+                  image:
+                      AssetImage("resources/images/dachstein_background.jpg"),
+                  repeat: ImageRepeat.noRepeat,
+                ),
+              ),
+              Column(children: [
+                Flexible(
+                    flex: 10,
+                    child: ListView(children: [
+                      DataTable(
+                        columns: widgetListHeader,
+                        rows: widgetListContent,
+                        columnSpacing: 10,
                       ),
-                    ),
-                    Flexible(
-                      flex: 10,
-                      child: Container(
-                        color: transparentWhite,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Table(
-                              children: widgetListContent,
-                              defaultVerticalAlignment:
-                                  TableCellVerticalAlignment.middle,
-                              columnWidths: columnWidths
-                              // border: TableBorder.all(),
-                              ),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: Container(
-                          color: transparentWhite,
-                          child: Center(
-                              child: Text(
-                            "last refreshed: " +
-                                snapshot.data!.refreshSettings.last,
-                          ))),
-                    ),
-                    Flexible(flex: 10, child: Container())
-                  ]),
-                ],
-              )
+                    ])),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                      color: transparentWhite,
+                      child: Center(
+                          child: Text(
+                        "last refreshed: " +
+                            snapshot.data!.refreshSettings.last,
+                      ))),
+                ),
+                Flexible(flex: 10, child: Container())
+              ]),
             ],
           );
         } else {
