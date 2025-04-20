@@ -2,12 +2,12 @@
   "$schema": "schema.json",
   "pistes": [
     {
-      "name": "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)",
+      "name": "Zugang Rosmariestollen - kein Status für Edelgrieß Abfahrt",
       "state": "unknown",
       "notification": true
     },
     {
-      "name": "Skitour Route Obertraun",
+      "name": "Dachsteinüberquerung nach Obertraun - Österreichische National Skitour",
       "state": "unknown",
       "notification": true
     }
