@@ -1,0 +1,19 @@
+{
+  "$schema": "schema.json",
+  "pistes": [
+    {
+      "name": "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)",
+      "state": "unknown",
+      "notification": true
+    },
+    {
+      "name": "Skitour Route Obertraun",
+      "state": "unknown",
+      "notification": true
+    }
+  ],
+  "refreshSettings": {
+    "interval": 60,
+    "last": "never"
+  }
+}
