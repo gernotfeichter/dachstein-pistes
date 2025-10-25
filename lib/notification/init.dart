@@ -1,11 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:math';
 
 // based on 9.1.5
 // https://pub.dev/packages/flutter_local_notifications#%EF%B8%8F-android-setup
 Future<FlutterLocalNotificationsPlugin> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to
 // the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
@@ -18,6 +22,7 @@ Future<FlutterLocalNotificationsPlugin> init() async {
   return flutterLocalNotificationsPlugin;
 }
 
+@pragma('vm:entry-point')
 void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
 }
 
