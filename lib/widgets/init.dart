@@ -62,17 +62,17 @@ class MainPageState extends State<MainPage> {
   }
 
   Future<void> _backgroundJobFinished() async {
-    logger.info("message channel: message received");
+    logger.i("message channel: message received");
     appSettingsUpdate();
   }
 
   void appSettingsUpdate() {
     setState(() {
       if (currentPage is FutureBuilder<AppSettings>) {
-        logger.info("currentPage is FutureBuilder<AppSettings>, refreshing ui");
-        logger.info("oldCurrentPage=${currentPage.hashCode}");
+        logger.i("currentPage is FutureBuilder<AppSettings>, refreshing ui");
+        logger.i("oldCurrentPage=${currentPage.hashCode}");
         currentPage = pistesPageFutureBuilder();
-        logger.info("newCurrentPage=${currentPage.hashCode}");
+        logger.i("newCurrentPage=${currentPage.hashCode}");
       }
     });
   }
@@ -85,20 +85,20 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    logger.info("initState called");
+    logger.i("initState called");
     super.initState();
     instance = this;
     instanceSet = true;
     currentPage = pistesPageFutureBuilder();
     job();
     timer = Timer.periodic(const Duration(minutes: 1), (Timer t) async {
-      logger.info("timed refresh of ui");
+      logger.i("timed refresh of ui");
       // Refresh ui every minute, as this is the maximum amount of refresh
       // frequency as per config and equals Android Alarm Manager limitation).
       // Normally the SendPort would communicate that it is finished,
       // but retrieving the static Handle to
       AppSettings appSettingsSnapshot = await get();
-      logger.info("attempting refresh ui with date = "
+      logger.i("attempting refresh ui with date = "
           "${appSettingsSnapshot.refreshSettings.last} (pid=$pid)");
       appSettingsUpdate();
     });

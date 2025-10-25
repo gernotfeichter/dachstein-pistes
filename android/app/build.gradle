@@ -40,8 +40,6 @@ android {
         }
         // Or shorter:
         jvmToolchain(17)
-        // For example:
-        jvmToolchain(17)
     }
 
     signingConfigs {

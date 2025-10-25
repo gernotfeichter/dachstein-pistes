@@ -15,7 +15,7 @@ void main() {
   testWidgets('widget test: load stubbed pistes', (WidgetTester tester) async {
 
     // Given: Widget is stared
-    logger.info("widget test started");
+    logger.i("widget test started");
     TestWidgetsFlutterBinding.ensureInitialized();
     MainPageState.response = await tester.runAsync(() async {
       return await getStubbedHttpResponse();

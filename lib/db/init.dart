@@ -11,7 +11,7 @@ import 'package:dachstein_pistes/logging/init.dart';
 // shared_preferences_bugs_anchor
 // This "db" interface uses the popular shared_preferences plugin.
 // Unfortunately there is an unresolved race condition bug in the given version,
-// such that I to implement synchronized code.
+// such that I had to implement synchronized code.
 // --> https://github.com/flutter/flutter/issues/95013
 // Also, db writes seem to be flushed out asynchronously without awaiting the
 // result, so I introduced sleeps in various places.
@@ -24,44 +24,44 @@ import 'package:dachstein_pistes/logging/init.dart';
 Future<void> init() async {
   var lock = Lock();
   await lock.synchronized(() async {
-    logger.info("init db started");
+    logger.i("init db started");
 
     final prefs = await SharedPreferences.getInstance();
     // see shared_preferences_bugs_anchor at top
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     if (appPreferences == null) {
-      logger.info("existing preferences could not be found, initializing");
+      logger.i("existing preferences could not be found, initializing");
       final seed = await rootBundle.loadString("lib/db/seed.json");
       final schemaString = await rootBundle.loadString("lib/db/schema.json");
       final jsonSchema = JsonSchema.create(schemaString);
-      logger.info("validating json schema");
+      logger.i("validating json schema");
       if (jsonSchema.validate(seed, parseJson: true).isValid) {
         prefs.setString(
             packageName(),
             seed);
       } else {
-        logger.severe("schema validation error!");
+        logger.e("schema validation error!");
         throw Exception("Dachstein Pistes could not start due to schema "
             "validation error from built in json schema.");
       }
     }
 
-    logger.info("init db finished");
+    logger.i("init db finished");
   });
 }
 
 Future<AppSettings> get() async {
   var lock = Lock();
   return await lock.synchronized(() async {
-    logger.info('db get start');
+    logger.i('db get start');
     await init();
     final prefs = await SharedPreferences.getInstance();
     // see shared_preferences_bugs_anchor at top
     sleep(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
-    logger.info('db get finished');
+    logger.i('db get finished');
     return AppSettings.fromJson(
       jsonDecode(appPreferences!)
     );
@@ -71,7 +71,7 @@ Future<AppSettings> get() async {
 Future<void> set(AppSettings appSettings) async {
   var lock = Lock();
   await lock.synchronized(() async {
-    logger.info('db set start');
+    logger.i('db set start');
 
 /*    // TODO Gernot start
     // see shared_preferences_bugs_anchor at top
@@ -89,10 +89,10 @@ Future<void> set(AppSettings appSettings) async {
 /*    // TODO Gernot start
     // see shared_preferences_bugs_anchor at top
     String actualDate = (await get()).refreshSettings.last;
-    logger.info("asserting $actualDate == $expectedDate");
+    logger.i("asserting $actualDate == $expectedDate");
     assert(actualDate == expectedDate);
     // TODO Gernot end*/
 
-    logger.info('db set finished');
+    logger.i('db set finished');
   });
 }

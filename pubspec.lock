@@ -580,6 +580,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  simple_native_logger:
+    dependency: "direct main"
+    description:
+      name: simple_native_logger
+      sha256: e8b6adf9c58d658564030d42b0da3cc1b163f5c9ea4241a4535c7cdd3c60180c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   sky_engine:
     dependency: transitive
     description: flutter

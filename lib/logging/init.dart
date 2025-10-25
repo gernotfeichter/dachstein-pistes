@@ -1,10 +1,12 @@
-import 'package:logging/logging.dart' show Logger;
+import 'package:simple_native_logger/simple_native_logger.dart';
 
-final Logger logger = Logger("DachsteinPistesMainLogger");
+late SimpleNativeLogger logger;
 bool loggerInitialized = false;
 
-void init(Logger logger) {
+void init() {
   if (!loggerInitialized) {
+    SimpleNativeLogger.init();
+    logger = SimpleNativeLogger(tag: "DachsteinPistesMain");
     loggerInitialized=true;
   }
 }
