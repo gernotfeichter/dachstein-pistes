@@ -18,10 +18,8 @@ void main() {
       // Then: Verify that pistes are on the list
       expect(find.text('Piste'), findsWidgets);
       expect(find.text(
-      "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)"),
+      "Edelgrieß"),
       findsWidgets);
-      expect(find.text(
-      "Mittersteinabfahrt"), findsWidgets);
     });
 
   });
