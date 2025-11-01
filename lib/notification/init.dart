@@ -13,7 +13,7 @@ Future<FlutterLocalNotificationsPlugin> init() async {
 // initialise the plugin. app_icon needs to be a added as a drawable resource to
 // the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('dachstein_piste_notification_icon');
+  AndroidInitializationSettings('ic_notification');
   const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
   );
