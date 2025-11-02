@@ -13,20 +13,12 @@ Future<FlutterLocalNotificationsPlugin> init() async {
 // initialise the plugin. app_icon needs to be a added as a drawable resource to
 // the Android head project
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('ic_notification');
+  AndroidInitializationSettings('@mipmap/ic_launcher');
   const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
   );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   return flutterLocalNotificationsPlugin;
-}
-
-@pragma('vm:entry-point')
-void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
-}
-
-void selectNotification(String? payload) {
 }
 
 void displayNotification({String title = "", String body = ""}) async {
