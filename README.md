@@ -48,7 +48,7 @@ Better use the [integration tests](#integration-tests) below.
 ### releasing
 1. run [integration tests](#integration-tests)
 1. increase version number in [pubspec.yaml](pubspec.yaml)
-1. `flutter build appbundle`
+1. `flutter build appbundle --release`
 1. upload [app bundle](build/app/outputs/bundle/release/app-release.aab) to
    [Google Play Console](https://play.google.com/console) for Internal Testing
 1. commit state: `g commit -a -m "chore(release): <version number>"`

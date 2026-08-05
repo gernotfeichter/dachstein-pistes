@@ -18,13 +18,11 @@ void main() {
     assert(appSettings.pistes.length == 2);
     Piste firstPiste = appSettings.pistes.first;
     assert(firstPiste.name ==
-      "Zugang Skiroute Wilde Abfahrt Edelgriess (Rosmariestollen)");
+      "Zugang Rosmariestollen - kein Status für Edelgrieß Abfahrt");
     assert(firstPiste.state == "unknown");
     assert(firstPiste.notification == true);
 
     assert(appSettings.refreshSettings.last == "never");
-    // TODO Gernot change back to 60!
-    //assert(appSettings.refreshSettings.interval == 60);
-    assert(appSettings.refreshSettings.interval == 1);
+    assert(appSettings.refreshSettings.interval == 60);
   });
 }

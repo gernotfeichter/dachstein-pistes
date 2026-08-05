@@ -12,13 +12,12 @@ void main() {
     await tester.pumpAndSettle();
 
     // When: I wait till the pistes are fetched
-    await Future.delayed(const Duration(seconds: 10), () async {
+    await Future.delayed(const Duration(seconds: 20), () async {
       await tester.pumpAndSettle();
 
       // Then: Verify that pistes are on the list
       expect(find.text('Piste'), findsWidgets);
-      expect(find.text(
-      "Edelgrieß"),
+      expect(find.textContaining("Mitterstein"),
       findsWidgets);
     });
 

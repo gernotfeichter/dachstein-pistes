@@ -7,11 +7,25 @@
 
 import 'package:dachstein_pistes/logging/init.dart';
 import 'package:dachstein_pistes/widgets/init.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../global/init.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  const MethodChannel channel = MethodChannel('simple_native_logger');
+
+  setUpAll(() {
+    SharedPreferences.setMockInitialValues({});
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      return null;
+    });
+  });
+
+  init();
   testWidgets('widget test: load stubbed pistes', (WidgetTester tester) async {
 
     // Given: Widget is stared
