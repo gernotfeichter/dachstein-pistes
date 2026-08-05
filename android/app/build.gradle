@@ -7,10 +7,7 @@ plugins {
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("key.properties")
 if (!keystorePropertiesFile.exists()) {
-    keystorePropertiesFile = file("/home/nix/secrets/dachstein-pistes/key.properties")
-    if (!keystorePropertiesFile.exists()) {
-        keystorePropertiesFile = file("/home/nix/secrets/key.properties")
-    }
+    keystorePropertiesFile = file("/home/nix/secrets/key.properties")
 }
 
 if (keystorePropertiesFile.exists()) {

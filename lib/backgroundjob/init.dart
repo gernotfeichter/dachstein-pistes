@@ -12,7 +12,7 @@ import 'package:simple_native_logger/simple_native_logger.dart';
 
 @pragma('vm:entry-point')
 Future<void> job() async {
-  SimpleNativeLogger.init();
+  lg.init();
   final logger = SimpleNativeLogger(tag: "DachsteinPistesJobLogger");
 
   try {

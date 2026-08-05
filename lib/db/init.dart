@@ -21,44 +21,53 @@ import 'package:dachstein_pistes/logging/init.dart';
 // If I had known this before, I would not have used this module.
 // But I hope it will be fixed soon.
 
+final _lock = Lock();
+bool _dbInitialized = false;
+
 Future<void> init() async {
-  var lock = Lock();
-  await lock.synchronized(() async {
-    logger.i("init db started");
-
-    final prefs = await SharedPreferences.getInstance();
-    // see shared_preferences_bugs_anchor at top
-    await prefs.reload();
-    final appPreferences = prefs.getString(packageName());
-    if (appPreferences == null) {
-      logger.i("existing preferences could not be found, initializing");
-      final seed = await rootBundle.loadString("lib/db/seed.json");
-      final schemaString = await rootBundle.loadString("lib/db/schema.json");
-      final jsonSchema = JsonSchema.create(schemaString);
-      logger.i("validating json schema");
-      if (jsonSchema.validate(seed, parseJson: true).isValid) {
-        prefs.setString(
-            packageName(),
-            seed);
-      } else {
-        logger.e("schema validation error!");
-        throw Exception("Dachstein Pistes could not start due to schema "
-            "validation error from built in json schema.");
-      }
-    }
-
-    logger.i("init db finished");
+  if (_dbInitialized) return;
+  
+  await _lock.synchronized(() async {
+    await _initInternal();
   });
 }
 
+Future<void> _initInternal() async {
+  if (_dbInitialized) return;
+  logger.i("init db started");
+
+  final prefs = await SharedPreferences.getInstance();
+  // see shared_preferences_bugs_anchor at top
+  await prefs.reload();
+  final appPreferences = prefs.getString(packageName());
+  if (appPreferences == null) {
+    logger.i("existing preferences could not be found, initializing");
+    final seed = await rootBundle.loadString("lib/db/seed.json");
+    final schemaString = await rootBundle.loadString("lib/db/schema.json");
+    final jsonSchema = JsonSchema.create(schemaString);
+    logger.i("validating json schema");
+    if (jsonSchema.validate(seed, parseJson: true).isValid) {
+      prefs.setString(
+          packageName(),
+          seed);
+    } else {
+      logger.e("schema validation error!");
+      throw Exception("Dachstein Pistes could not start due to schema "
+          "validation error from built in json schema.");
+    }
+  }
+
+  logger.i("init db finished");
+  _dbInitialized = true;
+}
+
 Future<AppSettings> get() async {
-  var lock = Lock();
-  return await lock.synchronized(() async {
+  return await _lock.synchronized(() async {
     logger.i('db get start');
-    await init();
+    await _initInternal();
     final prefs = await SharedPreferences.getInstance();
     // see shared_preferences_bugs_anchor at top
-    sleep(const Duration(milliseconds: 200)); // file is written asynchronously
+    await Future.delayed(const Duration(milliseconds: 200)); // file is written asynchronously
     await prefs.reload();
     final appPreferences = prefs.getString(packageName());
     logger.i('db get finished');
@@ -69,29 +78,16 @@ Future<AppSettings> get() async {
 }
 
 Future<void> set(AppSettings appSettings) async {
-  var lock = Lock();
-  await lock.synchronized(() async {
+  await _lock.synchronized(() async {
     logger.i('db set start');
 
-/*    // TODO Gernot start
-    // see shared_preferences_bugs_anchor at top
-    String expectedDate = appSettings.refreshSettings.last;
-    // TODO Gernot end*/
-
-    await init();
+    await _initInternal();
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
     prefs.setString(
         packageName(),
         jsonEncode(appSettings.toJson())
     );
-
-/*    // TODO Gernot start
-    // see shared_preferences_bugs_anchor at top
-    String actualDate = (await get()).refreshSettings.last;
-    logger.i("asserting $actualDate == $expectedDate");
-    assert(actualDate == expectedDate);
-    // TODO Gernot end*/
 
     logger.i('db set finished');
   });
