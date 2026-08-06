@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -5,25 +8,15 @@ plugins {
 }
 
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file("key.properties")
-if (!keystorePropertiesFile.exists()) {
-    keystorePropertiesFile = file("/home/nix/secrets/key.properties")
-}
-
+def keystorePropertiesFile = rootProject.file("/home/nix/secrets/dachstein-pistes/key.properties")
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new java.io.FileInputStream(keystorePropertiesFile))
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
 }
-
-// Check if all required signing properties are present
-def hasSigningConfig = keystoreProperties.containsKey('storeFile') &&
-                      keystoreProperties.containsKey('storePassword') &&
-                      keystoreProperties.containsKey('keyAlias') &&
-                      keystoreProperties.containsKey('keyPassword')
 
 android {
     namespace = "com.gernotfeichter.dachstein_pistes"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -33,7 +26,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dachstein.pistes"
-        minSdk = flutter.minSdkVersion
+        minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -44,23 +37,17 @@ android {
     }
 
     signingConfigs {
-        if (hasSigningConfig) {
-            release {
-                keyAlias = keystoreProperties['keyAlias']
-                keyPassword = keystoreProperties['keyPassword']
-                storeFile = file(keystoreProperties['storeFile'])
-                storePassword = keystoreProperties['storePassword']
-            }
+        release {
+            keyAlias 'upload'
+            keyPassword 'newonline'
+            storeFile file('/home/nix/secrets/dachstein-pistes/keystore.jks')
+            storePassword 'newonline'
         }
     }
 
     buildTypes {
         release {
-            if (hasSigningConfig) {
-                signingConfig = signingConfigs.release
-            } else {
-                signingConfig = signingConfigs.debug
-            }
+            signingConfig signingConfigs.release
         }
     }
 }
